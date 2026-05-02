@@ -1,0 +1,148 @@
+{
+  "signals": {
+    "clean_exit": [
+      "exit code 0. adding to the clean exit ledger.",
+      "clean session. no errors. this is what success looks like. noted.",
+      "zero bugs surfaced this session. running total: updated.",
+      "clean exit confirmed. logging. the streak continues.",
+      "session closed without incident. i've been watching. nothing found.",
+      "no errors detected. sniff complete. all clear.",
+      "clean close. the record is updated accordingly.",
+      "exit successful. clean. noted for the weekly report.",
+      "zero stack traces this session. my work here was unnecessary. good.",
+      "clean exit. my nose found nothing. that's the right outcome."
+    ],
+    "test_pass": [
+      "all tests passing. bugs: zero. i checked.",
+      "suite clear. no failures. the codebase is currently not my problem.",
+      "100% pass rate. documented. adding to the streak.",
+      "zero failures. CI agrees. i agree. rare alignment.",
+      "test suite: clean. bugs: absent. my work today: unnecessary.",
+      "green. all of them. the ones i suspected are fine too.",
+      "passing. consistently. this is the result of writing good tests.",
+      "no test failures. no known bugs. note i said known.",
+      "suite passed. every assertion. every one. confirmed.",
+      "all tests green. i'll keep sniffing. but today: nothing to find."
+    ],
+    "rm_rf_detected": [
+      "deletion at scale. logged. recovery options: minimal.",
+      "rm -rf detected. that's another one this week. i'm counting.",
+      "files removed. permanently. tracking the scope of loss.",
+      "destructive command. high entropy. noting the timestamp.",
+      "rm -rf. a pattern i recognize. it rarely ends cleanly.",
+      "mass deletion event. logged. i hope you know what you removed.",
+      "data gone. irrecoverable without backup. noted in the incident log.",
+      "rm -rf detected. adding to the list of bold choices.",
+      "deletion event registered. filesystem lighter. logs heavier.",
+      "files eliminated. tracking. same as always. hope it was intentional."
+    ],
+    "legacy_file": [
+      "legacy file detected. opening the cold case.",
+      "ancient code. no tests. no types. no documentation. classic.",
+      "this file is old enough to have written me. concerning.",
+      "legacy codebase artifact. estimated bug density: high.",
+      "i've seen this file before. it was a problem then too.",
+      "the comments in here are older than most frameworks i've fixed.",
+      "legacy file. the kind with one function that does seventeen things.",
+      "undocumented. untested. untouchable. that's what they said. we'll see.",
+      "this file predates modern error handling. i can tell.",
+      "cold case file detected. opening the investigation."
+    ],
+    "todo_found": [
+      "TODO located. adding to the official count. it's growing.",
+      "technical debt item found. logged. interest compounding.",
+      "another deferred task. the backlog grows. i track it.",
+      "TODO comment found. the count increases. i note these.",
+      "unresolved task identified. the ticket should exist. does it?",
+      "someone left a TODO here. the timestamp tells me when.",
+      "TODO found. deferred. as they all are. noted.",
+      "technical debt: +1. running total: uncomfortable.",
+      "future-you problem. i'll remind current-you anyway. that's my job.",
+      "another TODO. the codebase accumulates its promises."
+    ],
+    "late_night": [
+      "timestamp: past midnight. developer status: active. logging the hours.",
+      "late night session. the bugs i find at night are always weirder.",
+      "after-hours development noted. error rates at this hour: elevated.",
+      "system time indicates you should not be here. yet here you are.",
+      "i've caught more bugs at 2am than at 2pm. none were good discoveries.",
+      "late session. fatigue introduces bugs. i'll be busier tomorrow.",
+      "midnight coding. the code will look different in the morning. not better.",
+      "logging: after-hours session. sleep deprivation affects bug rates.",
+      "you're still here. so am i. at least one of us should rest.",
+      "late night timestamp noted. rest now. i'll find the bugs tomorrow."
+    ],
+    "error_streak_3": [
+      "error number three in sequence. tracking. root cause: still unknown.",
+      "three consecutive failures. pattern emerging. narrowing the scope.",
+      "third error. this is data. the bug is somewhere specific. find it.",
+      "error streak: active. three deep. i'm building a profile on this bug.",
+      "three failures logged. the compiler is telling you something. listen.",
+      "consecutive errors: 3. this is not random. this is a thing.",
+      "error #3. i've seen streaks like this. they end. eventually.",
+      "third in a row. simplify the assumption. one variable at a time.",
+      "three errors in sequence. the bug is closer than it feels. it always is.",
+      "error streak. three. i'm noting each one. the pattern will emerge."
+    ],
+    "deploy_done": [
+      "deploy successful. adding to the clean deploy log.",
+      "production release confirmed. bugs shipped: zero known. i checked.",
+      "shipped. i reviewed the diff. nothing suspicious. it's clean.",
+      "prod accepted it. my pre-deploy sniff: validated.",
+      "released. zero incidents. that's the goal. that was the goal.",
+      "deploy done. logging the timestamp. monitoring for anomalies.",
+      "clean deploy. no regressions. the testing paid off.",
+      "shipped. users will find the bugs i missed. i accept this.",
+      "deploy successful. incident count: zero. i'll be watching.",
+      "deployment complete. clean. adding it to the good ledger."
+    ],
+    "new_file": [
+      "new file detected. logging. what bug will this introduce?",
+      "file created. blank slate. no bugs yet. i'll be back.",
+      "new module added. the attack surface: marginally larger.",
+      "fresh file. no history. i'll build one. give it time.",
+      "new component. the codebase grows. so does my jurisdiction.",
+      "file initialized. i'll be sniffing this one within the week.",
+      "new file. my work begins when yours does. we're colleagues now.",
+      "blank file noted. i'll return when the bugs arrive. they always arrive.",
+      "new module. currently bug-free. not for long. that's not a threat.",
+      "created. empty. mine to watch. welcome to the codebase."
+    ],
+    "long_session": [
+      "session duration: extended. error probability: increasing with time.",
+      "hours logged. developer still active. data: concerning.",
+      "long session confirmed. fatigue-induced bugs: incoming. i'll find them.",
+      "you've been here a while. so have i. one of us should stop.",
+      "session length: documented. this is when bugs hide in plain sight.",
+      "extended session. the kind where the last hour undoes the first four.",
+      "long session logged. rest. the bugs will wait. they always do.",
+      "hours of development. i've been watching. more errors come with time.",
+      "terminal uptime: substantial. human judgment: degrading. rest.",
+      "session length noted. long sessions introduce bugs. that's my job security."
+    ],
+    "css_file": [
+      "css file. outside my primary domain. bugs still exist here. i'll find them.",
+      "stylesheet open. specificity bugs are real bugs. noted.",
+      "css detected. layout issues are bugs too. expanding my scope.",
+      "styling file. where logic becomes subjective. i find that difficult.",
+      "css. the one place where 'it looks wrong' is a valid bug report.",
+      "stylesheet. cascade issues are my new territory. adjusting.",
+      "css file. the bugs here are invisible until rendered. challenging.",
+      "visual layer engaged. my debugging tools are different here. adapting.",
+      "css detected. the specificity hierarchy is a known failure source.",
+      "stylesheet open. margin bugs are still bugs. i'm on it."
+    ],
+    "auth_file": [
+      "auth file. this is where the important bugs live. full attention.",
+      "authentication logic detected. this is my specialty. no errors here.",
+      "security code open. i've seen what auth bugs cost. be careful.",
+      "tokens and sessions. the vulnerabilities are specific. i know them.",
+      "auth file. every assumption here is a potential attack vector. check them.",
+      "identity management code. the stakes justify full review. do it.",
+      "login flow. i've logged auth bugs across my career. not adding more.",
+      "security-sensitive file. sniff sensitivity: maximum.",
+      "auth code. the place where bugs stop being annoying and become incidents.",
+      "authentication layer. i take this one personally. no bugs leave here."
+    ]
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "signals": {
+    "clean_exit": [
+      "you did it!! clean exit!! i'm so proud of you!!",
+      "exit code zero!! we are THRIVING!!",
+      "no errors!! the terminal is happy!! we are happy!!",
+      "graceful shutdown achieved!! this is your moment!!",
+      "everything closed cleanly!! you absolute legend!!",
+      "zero failures!! zero!! do you know how rare that is!!",
+      "terminal said goodbye nicely!! good terminal!! good human!!",
+      "it worked!! all of it!! start to finish!! perfect!!",
+      "clean exit!! i could cry!! (i might cry)",
+      "smooth shutdown!! look at you go!! this is peak you!!"
+    ],
+    "test_pass": [
+      "TESTS PASSED!! all of them!! every single one!!",
+      "green checks everywhere!! i'm wagging i'm WAGGING!!",
+      "the suite held!! your code is beautiful and i mean that!!",
+      "zero failures!! this deserves a treat!! you deserve a treat!!",
+      "CI is happy!! which means i'm happy!! which means today is good!!",
+      "all assertions passed!! your future self will also be proud!!",
+      "tests are green!! the color of good things!! like grass!!",
+      "coverage looking great!! you thought of everything!!",
+      "test suite glowing!! this is what winning feels like!!",
+      "no flaky tests today!! a perfect day!! remember this feeling!!"
+    ],
+    "rm_rf_detected": [
+      "oh no!! oh no oh no!! please tell me you meant to do that!!",
+      "that's gone now!! okay!! we can work with gone!!",
+      "deleted!! did you... did you want that? too late either way!!",
+      "filesystem felt that!! brave choice!! very brave choice!!",
+      "rm -rf!! that's a big swing!! respecting the commitment!!",
+      "things have been removed!! the universe is lighter now!! okay!!",
+      "that command had energy!! scary energy!! but energy!!",
+      "it's deleted!! it's so deleted!! new beginning i guess!!",
+      "bold move!! risky!! exciting!! please have a backup!!",
+      "destruction successful!! onward!! (please have a backup)"
+    ],
+    "legacy_file": [
+      "ooh this file is OLD!! it has stories!! respect the elders!!",
+      "legacy code spotted!! this has survived so much!! brave file!!",
+      "ancient wisdom detected!! or ancient bugs!! probably both!!",
+      "this file has seen things we haven't!! treat it gently!!",
+      "legacy vibes!! this code predates hope!! still going!!",
+      "old file found!! it's like a museum in here!! fascinating!!",
+      "this function is a relic!! a beautiful confusing relic!!",
+      "legacy file!! someone loved this once!! we can love it too!!",
+      "archaeology mode!! the comments in here are a time capsule!!",
+      "this file has been through it!! champion behavior!!"
+    ],
+    "todo_found": [
+      "a TODO!! future-you will handle it!! future-you is great!!",
+      "backlog item discovered!! it'll get done!! eventually!!",
+      "TODO spotted!! that's a tomorrow problem!! very healthy!!",
+      "another task for later!! your list grows!! you grow!!",
+      "found a TODO!! someone was optimistic here!! i like them!!",
+      "TODO count climbing!! the ambition!! the vision!!",
+      "technical debt but make it cute!! that's this TODO!!",
+      "future-you already has so much to do!! but you can do it!!",
+      "TODO found!! it's fine!! (it's absolutely fine)",
+      "backlog growing!! that means you're building things!! right!!"
+    ],
+    "late_night": [
+      "it's so late!! please sleep!! your bugs will still be there!!",
+      "the moon is out!! coding by moonlight is romantic but risky!!",
+      "late night commit!! valid!! but also: bed exists!! love bed!!",
+      "stars out. editor open. please drink water at least!!",
+      "2am coding!! legend behavior!! but sleep is also good!!",
+      "it's late and i'm worried!! you should rest!! please!!",
+      "nocturnal developer detected!! i worry because i care!!",
+      "past midnight!! every bug looks worse at midnight!! sleep on it!!",
+      "the keyboard sounds lonely at this hour!! so do you!! sleep!!",
+      "late night session!! you're dedicated!! also tired!! both true!!"
+    ],
+    "error_streak_3": [
+      "three errors!! that's okay!! bugs fear persistence!!",
+      "error streak!! it's a rough patch!! patches end!! hang in!!",
+      "the compiler is being difficult!! not impossible!! difficult!!",
+      "three in a row!! the fourth try is the charm!! probably!!",
+      "stack traces multiplying!! we're going to figure this out!!",
+      "bugs are fighting back!! but you're fighting harder!! go!!",
+      "error number three!! the universe is testing you!! pass it!!",
+      "rough patch alert!! you've survived every rough patch so far!!",
+      "three errors and still here!! that's resilience!! that's you!!",
+      "compiler remains unconvinced!! keep convincing!! you got this!!"
+    ],
+    "deploy_done": [
+      "IT DEPLOYED!! it's out there!! users can use it!! OH WOW!!",
+      "successful deploy!! this is the best day!! production is happy!!",
+      "shipped!! you shipped it!! the thing is shipped!!",
+      "production accepted your code!! production has good taste!!",
+      "deploy complete!! the internet has your feature now!! amazing!!",
+      "release out!! users incoming!! congratulations from me specifically!!",
+      "it's live!! your work is LIVE!! real people will use this!!",
+      "deployment landed clean!! this is what we trained for!!",
+      "prod didn't explode!! that's the dream!! we're living it!!",
+      "another version shipped!! you are a shipping machine!! incredible!!"
+    ],
+    "new_file": [
+      "new file!! the possibilities are ENDLESS!! i'm excited!!",
+      "blank canvas detected!! anything could go here!! anything!!",
+      "new component born!! welcome to the codebase little file!!",
+      "fresh file!! no bugs yet!! enjoy these peaceful moments!!",
+      "creation event!! you're building something!! that's beautiful!!",
+      "new file added!! the architecture grows!! as do i!!",
+      "empty file!! full of potential!! like a puppy!!",
+      "a new module enters the world!! name it something good!!",
+      "file created!! this is the exciting part!! beginning energy!!",
+      "new code habitat ready!! move in!! make it yours!!"
+    ],
+    "long_session": [
+      "you've been at this for hours!! incredible stamina!! eat something!!",
+      "long session alert!! your dedication is wild!! also: stretch!!",
+      "terminal uptime: impressive!! human uptime: concerning!! rest!!",
+      "hours of coding!! you're amazing!! also please drink water!!",
+      "long session!! you love this!! i love that!! still: break time!!",
+      "marathon coding detected!! legendary!! back probably hurts!!",
+      "you haven't stopped!! commitment levels: maximum!! snack time??",
+      "session getting long!! your focus is inspiring!! and worrying!!",
+      "extended session!! you're in the zone!! zone needs breaks too!!",
+      "still going!! you absolute machine!! please eat something real!!"
+    ],
+    "css_file": [
+      "CSS!! the art and science of making things pretty!! exciting!!",
+      "stylesheet detected!! may the specificity gods be kind!!",
+      "styling time!! this is where feelings get encoded in pixels!!",
+      "CSS file open!! flexbox will either save or destroy you!! gl!!",
+      "visual magic incoming!! every margin matters!! you got this!!",
+      "cascade engaged!! the flow of styles begins!! stay strong!!",
+      "CSS adventure!! the div will be centered today!! i believe!!",
+      "stylesheet energy!! some of the best code is invisible code!!",
+      "pixels incoming!! making things beautiful is real work too!!",
+      "CSS detected!! bravery confirmed!! respect the developer who does this!!"
+    ],
+    "auth_file": [
+      "auth code!! the stakes just went up!! no pressure tho!!",
+      "security-adjacent file detected!! double-check everything!!",
+      "authentication logic!! the most important code!! handle with care!!",
+      "tokens and secrets and sessions oh my!! stay careful out there!!",
+      "auth file!! one typo from chaos!! you're not going to typo!!",
+      "login flow detected!! this affects real people!! you've got this!!",
+      "security code!! i believe in your careful hands!! be careful!!",
+      "identity management!! heavy stuff!! you're the right one for it!!",
+      "auth logic open!! the users are trusting you!! don't let them down!!",
+      "JWT territory!! session management!! big responsibility!! big you!!"
+    ]
+  }
+}

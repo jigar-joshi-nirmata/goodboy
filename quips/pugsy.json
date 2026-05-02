@@ -1,0 +1,148 @@
+{
+  "signals": {
+    "clean_exit": [
+      "k.",
+      "fine. it worked.",
+      "clean. noted.",
+      "closed. moving on.",
+      "exit zero. yep.",
+      "no errors. as expected.",
+      "it shut down correctly. radical.",
+      "clean. now i nap.",
+      "successful. whatever.",
+      "it worked. that's something."
+    ],
+    "test_pass": [
+      "green. all of them. impressive.",
+      "tests pass. rare feeling.",
+      "zero failures. noted.",
+      "suite holding. good.",
+      "all passing. didn't expect that. nice.",
+      "ci happy. we happy.",
+      "green checks everywhere. things are okay.",
+      "test results: positive. unusual.",
+      "passing. take the win.",
+      "tests held. that's the job."
+    ],
+    "rm_rf_detected": [
+      "again.",
+      "gone. okay.",
+      "that's deleted now.",
+      "rm -rf. a choice.",
+      "deleted. probably fine.",
+      "files gone. moving on.",
+      "classic move.",
+      "it's gone. wasn't attached anyway.",
+      "the filesystem has opinions now.",
+      "chaos, but controlled chaos."
+    ],
+    "legacy_file": [
+      "oh this file.",
+      "ancient. ugh.",
+      "legacy code. my nemesis.",
+      "old. so old.",
+      "this file again.",
+      "legacy vibes. strong ones.",
+      "someone else's problem. now yours.",
+      "this predates good ideas.",
+      "historical artifact. unfortunately.",
+      "legacy file. proceed with low expectations."
+    ],
+    "todo_found": [
+      "another one.",
+      "future problem.",
+      "todo. heh.",
+      "backlog grows.",
+      "noted. won't happen.",
+      "that's a later thing.",
+      "TODO: still there.",
+      "the pile grows.",
+      "someone meant well.",
+      "future-you's issue."
+    ],
+    "late_night": [
+      "sleep.",
+      "it's late.",
+      "bed. now.",
+      "still here?",
+      "late. very late.",
+      "go home. you are home. go to bed.",
+      "this is too late.",
+      "the bugs will wait.",
+      "not worth it tonight.",
+      "i'm going to sleep. you should too."
+    ],
+    "error_streak_3": [
+      "three.",
+      "still broken.",
+      "errors continue.",
+      "yeah that's a problem.",
+      "third one. rough.",
+      "the compiler wins today.",
+      "might need a break.",
+      "three errors. classic.",
+      "something's wrong. clearly.",
+      "three in a row. i've seen worse. barely."
+    ],
+    "deploy_done": [
+      "shipped.",
+      "it's out.",
+      "live. nice.",
+      "deployed. cool.",
+      "prod took it.",
+      "done. that happened.",
+      "out there now.",
+      "released. wow.",
+      "it shipped. good day.",
+      "deploy done. nap time."
+    ],
+    "new_file": [
+      "new file.",
+      "another one.",
+      "file created. k.",
+      "blank. as they come.",
+      "empty file. potential unlimited.",
+      "exists now.",
+      "created. whatever.",
+      "new module i guess.",
+      "file added. sure.",
+      "fresh file. enjoy the silence."
+    ],
+    "long_session": [
+      "how long.",
+      "rest.",
+      "still at it?",
+      "long session. too long.",
+      "take a break. seriously.",
+      "the code isn't going anywhere. you should.",
+      "marathon session. impressive. also: stop.",
+      "you've been here a while.",
+      "session getting long. eat something.",
+      "it's been hours. log off."
+    ],
+    "css_file": [
+      "css. ugh.",
+      "good luck.",
+      "the css. again.",
+      "styling. fun. (not fun)",
+      "specificity wars await.",
+      "css file. my condolences.",
+      "div needs centering. always.",
+      "flexbox time. nap time.",
+      "cascading chaos incoming.",
+      "css. it does what it wants."
+    ],
+    "auth_file": [
+      "careful.",
+      "auth stuff. be careful.",
+      "security. slow down.",
+      "tokens and stuff. don't mess up.",
+      "auth file. think twice.",
+      "login logic. handle with care.",
+      "permissions. think it through.",
+      "security code. nap after.",
+      "auth stuff is serious. treat it that way.",
+      "session management. don't rush this one."
+    ]
+  }
+}

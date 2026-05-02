@@ -1,0 +1,148 @@
+{
+  "signals": {
+    "clean_exit": [
+      "it worked. somehow.",
+      "exit code zero. don't celebrate yet. it might be a fluke.",
+      "clean exit. not what i expected. pleasantly surprised.",
+      "no errors. this time.",
+      "it closed properly. noted. moving on.",
+      "clean. fine. good enough.",
+      "terminal survived. as did i. barely.",
+      "graceful shutdown. you've done worse.",
+      "zero errors. i'll allow it.",
+      "it worked. don't ask me why. it just did."
+    ],
+    "test_pass": [
+      "tests passed. i mean. fine.",
+      "green. all of them. i'm not going to make a big deal of it.",
+      "suite passed. good. that's the minimum. well done hitting the minimum.",
+      "zero failures. take the win. you've earned it. barely.",
+      "tests held. expected behavior. still — decent.",
+      "passing. all passing. i'm surprised and i won't hide that.",
+      "CI is green. which is correct. we don't celebrate correct. or do we.",
+      "all assertions. passed. by you. that person coding right now.",
+      "test suite behaving. good for the test suite.",
+      "no failures. you may feel something. i'll allow it."
+    ],
+    "rm_rf_detected": [
+      "bold.",
+      "that's gone now. forever. just so we're clear.",
+      "rm -rf. a classic. a dangerous classic.",
+      "legendary risk tolerance.",
+      "it's deleted. hope that was the plan.",
+      "filesystem felt that. so did i.",
+      "that command had consequences. consequences are forming.",
+      "i've watched better developers make worse decisions. carry on.",
+      "deleted. completely. irreversibly. fine.",
+      "that's one way to solve the problem."
+    ],
+    "legacy_file": [
+      "oh. that file.",
+      "legacy. the word that ends careers.",
+      "this code predates best practices. and apparently also: hope.",
+      "ancient. untouched. for good reason.",
+      "legacy file detected. the smell is historical.",
+      "this function has seen things we haven't. survived things we shouldn't.",
+      "comments from another era. tabs from another dimension.",
+      "archaeology. not the fun kind.",
+      "this file predates the last three major versions. touch carefully.",
+      "someone wrote this in fear. you can feel it."
+    ],
+    "todo_found": [
+      "future-you problem.",
+      "another TODO. another lie we tell ourselves.",
+      "technical debt. increasing. noted.",
+      "promising future-you won't deliver. classic.",
+      "TODO. translation: not today. not tomorrow. eventually.",
+      "backlog growing. as backlogs do.",
+      "someone wrote this TODO instead of fixing it. bold strategy.",
+      "future-you will be annoyed. current-you: unconcerned.",
+      "the TODO list grows. the done list waits.",
+      "found a TODO. added to the pile. the pile is fine."
+    ],
+    "late_night": [
+      "go to bed.",
+      "it's late. you know this. still here. okay.",
+      "debugging at midnight. the worst version of any activity.",
+      "the bugs don't sleep. unfortunately neither do you.",
+      "late night session. the code quality is probably fine. (it isn't)",
+      "sleep deprivation: active. code quality: questionable. goodnight.",
+      "you should not be here right now.",
+      "the moon is out. so are you. one of you should go inside.",
+      "midnight commits rarely age well. documented fact.",
+      "go. to. bed. this will still be broken tomorrow. rest first."
+    ],
+    "error_streak_3": [
+      "three. in a row. are you okay.",
+      "error streak. three deep. the pattern is noted.",
+      "third error. the compiler is not impressed. neither am i.",
+      "consecutive failures. something is specifically wrong.",
+      "three errors and counting. breathe.",
+      "stack traces are accumulating. this is fine. (it's not fine)",
+      "third failure. step away. look at something that isn't a screen.",
+      "error number three. the problem is probably simpler than it seems.",
+      "three in a row. the codebase is trying to tell you something.",
+      "pattern: failing. cause: somewhere obvious. probably."
+    ],
+    "deploy_done": [
+      "deployed. production didn't die. respectable.",
+      "it shipped. against all odds.",
+      "prod accepted it. that's something.",
+      "live now. users will find the bugs you didn't. that's their job.",
+      "deployed. clean. i'm almost impressed.",
+      "it's out. can't un-out it. good luck.",
+      "shipped. the part where things go wrong comes next. just so you know.",
+      "deploy succeeded. celebrate briefly. then watch the logs.",
+      "production has your code now. production is responsible now.",
+      "released. as intended. good."
+    ],
+    "new_file": [
+      "new file. another one.",
+      "blank canvas. endless potential. probably just another component.",
+      "file created. the codebase grows. as it does.",
+      "new. empty. untouched. enjoy the innocence while it lasts.",
+      "another file enters the repository. the repository accepts.",
+      "fresh file. no history. no baggage. yet.",
+      "created. filename approved. naming things is hard. you did it.",
+      "another module. the architecture expands. fine.",
+      "new file. currently perfect. won't stay that way.",
+      "blank file detected. the void awaits your logic."
+    ],
+    "long_session": [
+      "how long have you been here.",
+      "long session. the terminal hasn't forgotten you. unlike your body.",
+      "hours of this. several hours. of this.",
+      "you're still here. that's a choice. a questionable one.",
+      "session length: concerning. developer status: unblinking.",
+      "stand up. drink something. touch grass. in that order.",
+      "marathon session noted. the bugs aren't going anywhere. rest.",
+      "it's been a while. the outside world still exists. allegedly.",
+      "long session. still no break. classic. predictable. concerning.",
+      "you and the terminal. hours now. one of you should rest."
+    ],
+    "css_file": [
+      "css. the one that fights back.",
+      "stylesheet open. the specificity wars begin.",
+      "cascading style sheets. cascading like a waterfall of regret.",
+      "css. where logic goes to argue with itself.",
+      "styling. a discipline. one that requires patience. which you have. usually.",
+      "the div. centering it. the eternal struggle.",
+      "css file. may the cascade be ever in your favor.",
+      "stylesheet detected. flex your flexbox knowledge. literally.",
+      "css. someone has to do it. today that someone is you.",
+      "specificity incoming. i don't envy you."
+    ],
+    "auth_file": [
+      "auth code. tread carefully.",
+      "authentication logic. the thing that keeps everything from falling apart.",
+      "tokens. sessions. permissions. touch nothing without thinking twice.",
+      "security-sensitive. treat it like it matters. because it does.",
+      "auth file. one typo and someone else becomes you. be careful.",
+      "login flow. real users trust this. remember that.",
+      "jwt territory. read the docs. again. just to be safe.",
+      "identity management. the stakes don't get higher than this.",
+      "auth file open. your threat model should be open too.",
+      "permissions logic. double check. then check again. then ship it."
+    ]
+  }
+}

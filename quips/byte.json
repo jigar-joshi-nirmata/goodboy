@@ -1,0 +1,148 @@
+{
+  "signals": {
+    "clean_exit": [
+      "exit code: 0. session nominal. proceeding.",
+      "clean termination. within expected parameters.",
+      "zero errors. statistically consistent with good work.",
+      "graceful exit confirmed. as designed.",
+      "terminal closed cleanly. expected. still worth noting.",
+      "no anomalies detected. clean session on record.",
+      "exit successful. efficiency: optimal.",
+      "session closed without incident. this is the standard. meet it.",
+      "clean close. no deviation from expected behavior. good.",
+      "exit code 0. no stack traces. the baseline has been achieved."
+    ],
+    "test_pass": [
+      "100% pass rate. as modeled.",
+      "test suite: nominal. coverage: adequate. CI: satisfied.",
+      "all assertions evaluated true. correct behavior confirmed.",
+      "zero test failures. the probability of this was high. still: correct.",
+      "green across the board. this is what discipline produces.",
+      "suite passed. evidence of competent test authorship.",
+      "every test. every single one. passing. note the pattern.",
+      "coverage holding. assertions valid. confidence: justified.",
+      "test results: expected. write more tests. this is not a suggestion.",
+      "CI reports green. the pipeline is satisfied. you may proceed."
+    ],
+    "rm_rf_detected": [
+      "irreversible operation detected. logging.",
+      "rm -rf. high-entropy command. consequences are non-recoverable.",
+      "deletion at scale. probability of regret: non-trivial.",
+      "destructive command confirmed. backup status: unknown. risk: high.",
+      "filesystem modification: aggressive. undo: unavailable.",
+      "data removed. permanently. that was the outcome.",
+      "rm -rf registered. entropy increased. this is noted.",
+      "deletion event. large scope. hope your git is current.",
+      "command executed. files removed. causality is one-directional.",
+      "destructive operation: complete. recovery options: limited."
+    ],
+    "legacy_file": [
+      "legacy code detected. technical debt: unmeasured and likely high.",
+      "file age: significant. documentation: absent. risk: elevated.",
+      "ancient codebase artifact. no tests. no types. no hope.",
+      "legacy patterns identified. refactor timeline: overdue.",
+      "cyclomatic complexity: immeasurable. maintenance burden: high.",
+      "code age correlates with bug density. this file: very old.",
+      "undocumented. untested. unchanged for years. a liability.",
+      "legacy file. the type that 'works but nobody knows why'.",
+      "no documentation. no types. no known author. proceed carefully.",
+      "file predates modern tooling. predates some developers. be cautious."
+    ],
+    "todo_found": [
+      "TODO registered. unresolved technical debt: +1.",
+      "deferred task located. backlog: growing. delivery date: undefined.",
+      "TODO comment found. this represents a promise. track it.",
+      "technical debt identified. interest rate: compounding.",
+      "unfinished task in codebase. future sprint: unplanned.",
+      "TODO count: increasing. cognitive load: increasing. resolve soon.",
+      "deferred implementation detected. someone made a choice here.",
+      "backlog item discovered via comment. the proper channel is a ticket.",
+      "TODO: located. estimated resolution date: unknown. flag it.",
+      "technical debt accumulates. so does the cost of ignoring it."
+    ],
+    "late_night": [
+      "timestamp: after-hours. developer: active. sleep: skipped.",
+      "system time indicates suboptimal working conditions.",
+      "fatigue correlates with error rate. current time is a risk factor.",
+      "cognitive performance degrades after hour 8. this is hour unknown.",
+      "late-night coding: common. optimal: it is not.",
+      "decision quality decreases with sleep debt. noted.",
+      "current hour is outside recommended working range.",
+      "night session confirmed. performance data at this hour is not encouraging.",
+      "working after midnight: a choice. not the highest-EV choice.",
+      "fatigue state: likely. bug introduction rate: elevated. rest."
+    ],
+    "error_streak_3": [
+      "three consecutive failures. root cause: unresolved.",
+      "error pattern: repeating. debugging methodology: review recommended.",
+      "failure streak detected. systematic analysis required.",
+      "third error in sequence. statistical significance: increasing.",
+      "consecutive errors: 3. problem scope: narrowing. focus.",
+      "error rate: 100% over last three operations. this is data.",
+      "three failures. the issue is identifiable. isolate the variable.",
+      "error streak logged. break the pattern or understand it first.",
+      "repeated failures suggest a single root cause. find it.",
+      "three in a row. step back. the solution is closer than it feels."
+    ],
+    "deploy_done": [
+      "deployment successful. production: stable. proceed.",
+      "release confirmed. uptime maintained. objectives met.",
+      "deploy: complete. rollback plan: available. monitoring: active.",
+      "prod accepted the build. CI was right to pass it.",
+      "deployment nominal. users will interface with your decisions now.",
+      "release pushed. no immediate errors. initial signal: positive.",
+      "version incremented. artifacts deployed. the work continues.",
+      "deploy successful. the system behaves as intended. well-executed.",
+      "production updated. observe the dashboards. trust but verify.",
+      "shipped. the right way. measured, tested, deployed. good process."
+    ],
+    "new_file": [
+      "new file registered. architecture: growing.",
+      "module created. dependency graph: updated.",
+      "file initialized. ensure naming follows conventions.",
+      "new component. single responsibility principle: please.",
+      "blank file. all potential. ensure it earns its place in the tree.",
+      "creation event logged. where does this fit in the architecture?",
+      "new file. add tests. from the beginning. not as an afterthought.",
+      "file created. the codebase grows by one. make it count.",
+      "new module entered. cohesion: tbd. coupling: aim for low.",
+      "file initialized. the blank state is temporary. fill it deliberately."
+    ],
+    "long_session": [
+      "session duration: extended. performance degradation: likely.",
+      "hours elapsed since last break: several. cognitive load: high.",
+      "extended terminal uptime. human uptime: requires monitoring.",
+      "long session logged. error rate at hour 4+: measurably higher.",
+      "session length beyond optimal range. schedule a break.",
+      "terminal has been running. you have been running. stop. briefly.",
+      "cognitive performance: declining with duration. take the break.",
+      "data point: developers who rest make fewer errors. you need rest.",
+      "session duration: flagged. the work will be here. you should be too.",
+      "productivity curve inverts after extended sessions. you're there."
+    ],
+    "css_file": [
+      "stylesheet detected. specificity cascade: beginning.",
+      "CSS file open. the visual layer demands attention.",
+      "cascading styles. inspect element is your friend. use it.",
+      "flexbox or grid. pick one. stick to it. consistently.",
+      "stylesheet: active. cross-browser compatibility: your problem now.",
+      "CSS specificity is calculable. learn the rules. beat them.",
+      "visual layer engaged. the backend found this easy by comparison.",
+      "margin, padding, border-box. these distinctions matter. remember them.",
+      "CSS: the one domain where 'it works on my machine' has visual proof.",
+      "stylesheet open. document your decisions. future-you will ask."
+    ],
+    "auth_file": [
+      "authentication code: elevated priority. proceed carefully.",
+      "security-sensitive module. review every assumption. twice.",
+      "auth file detected. threat model: required. not optional.",
+      "token handling. session management. the stakes are high here.",
+      "identity layer: active. one logic error here affects every user.",
+      "auth code requires review. not self-review. independent review.",
+      "permission logic. exhaustively test edge cases. all of them.",
+      "JWT implementation. read the spec. verify the signature. log the attempt.",
+      "security code: this is where the attack surface is. be defensive.",
+      "authentication: where correctness is non-negotiable. be correct."
+    ]
+  }
+}
