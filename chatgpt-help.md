@@ -16,16 +16,21 @@ I have a pixel art dog character called [NAME] — [DESCRIPTION].
 Generate a sprite sheet showing 6 mood variants of this exact character. Requirements:
 - Same base character: same breed, same colors, same accessories
 - 64×64px pixel art per sprite, dark background (#0d1117)
-- Arranged in a 2×3 grid (2 columns, 3 rows)
+- Arranged in a 2×4 grid (2 columns, 4 rows)
 - Label underneath each sprite in small pixel-style text
 
-The 6 moods (in order, left to right, top to bottom):
-1. happy — tail up, bright eyes, slight open-mouth smile
-2. proud — chest out, sitting tall, eyes half-closed smugly
-3. alarmed — eyes wide open, ears raised, body tense
-4. sad — ears drooping, eyes downcast, slightly slumped
-5. sleepy — eyes half-closed, head tilted, optional "zzz" floating nearby
-6. judgy — eyes narrowed, head slightly turned, unimpressed side-eye
+The 8 moods (in order, left to right, top to bottom — arrange as 2 columns × 4 rows):
+1. happy — tail up, bright eyes, slight open-mouth smile, relaxed posture
+2. proud — chest out, sitting tall, eyes half-closed smugly, optional sparkle
+3. alarmed — eyes wide open, ears fully raised, body rigid, red ! indicator
+4. sad — ears drooping, eyes downcast, slightly slumped, lower energy
+5. sleepy — eyes half-closed, head tilted, ZZZ floating nearby, lying or slumped
+6. judgy — eyes narrowed, head slightly turned, unimpressed side-eye, dismissive posture
+7. excited — full zoomies energy, both front paws raised or mid-jump, huge eyes, sparkles, pure joy
+8. disgusted — nose wrinkled, body recoiling slightly, strong side-eye, looking away from something awful
+
+IMPORTANT: excited must look clearly different from happy — more energetic, more expressive, body in motion not sitting still.
+IMPORTANT: disgusted must look clearly different from judgy — active revulsion not passive disapproval.
 
 Keep the pixel art style consistent with a clean, modern indie game aesthetic. Dark background throughout.
 ```
@@ -215,7 +220,7 @@ Output as a single image.
 
 ## Notes for slicing sprites
 
-The mood sprite sheets (Task 1) will come back as a single image with 6 sprites in a 2×3 grid. Each individual sprite needs to be cropped to 64×64px and saved separately. Names must match exactly:
+The mood sprite sheets (Task 1) will come back as a single image with 8 sprites in a 2×4 grid. Each individual sprite needs to be cropped to 64×64px and saved separately. Names must match exactly:
 
 ```
 sprites/[persona]/happy.png
@@ -224,6 +229,8 @@ sprites/[persona]/alarmed.png
 sprites/[persona]/sad.png
 sprites/[persona]/sleepy.png
 sprites/[persona]/judgy.png
+sprites/[persona]/excited.png
+sprites/[persona]/disgusted.png
 ```
 
 If you need help slicing, drop the sheet images into the Claude Code session and ask me to slice them.
