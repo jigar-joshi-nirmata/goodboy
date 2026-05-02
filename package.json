@@ -1,0 +1,35 @@
+{
+  "name": "goodboy",
+  "version": "0.1.0",
+  "description": "A Tamagotchi for your terminal. Pick a dog. Ship code together.",
+  "main": "dist/index.js",
+  "bin": {
+    "goodboy": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "clean": "rm -rf dist"
+  },
+  "files": [
+    "dist",
+    "quips",
+    "sprites",
+    "README.md"
+  ],
+  "keywords": ["claude", "claude-code", "mcp", "terminal", "tamagotchi", "dog"],
+  "author": "jigar-joshi-nirmata",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
