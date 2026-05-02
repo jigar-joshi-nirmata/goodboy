@@ -29,22 +29,22 @@ Pick your companion on first run. Switch anytime with `goodboy switch`.
 ## Install
 
 ```bash
-npx goodboy init
+npm install -g goodboy
+goodboy init
 ```
 
-Then add to your Claude Code config:
+That's it. `goodboy init` auto-patches your `~/.claude/settings.json` to wire up the three hooks. Pick a persona on first run:
 
-```json
-// .claude/settings.json
-{
-  "mcpServers": {
-    "goodboy": {
-      "command": "npx",
-      "args": ["goodboy"]
-    }
-  }
-}
+```bash
+goodboy init goldie   # golden retriever — default
+goodboy init shiba    # shiba inu
+goodboy init byte     # border collie
+goodboy init pugsy    # pug
+goodboy init nova     # husky
+goodboy init debug    # dachshund
 ```
+
+Switch anytime: `goodboy switch <name>`
 
 ---
 
@@ -78,22 +78,33 @@ goodboy hooks into Claude Code's session lifecycle — not every tool call, just
 
 ## The deploy gate
 
+Run `goodboy sit` before deploying. It checks your `~/.goodboy.guard.json` config:
+
+```json
+{
+  "blocked_days": [5],
+  "blocked_hours": [0, 1, 2, 3, 22, 23],
+  "custom_message": "check the oncall calendar before Friday pushes"
+}
+```
+
 ```
 $ goodboy sit
 
-  [Shiba]  "sit."
+  ⚠️  today is Friday — are you sure about this deploy?
+  ⚠️  check the oncall calendar before Friday pushes
 
-  ✓ tests passing
-  ✓ no console.log left behind
-  ✓ branch is not main
-  ✗ 3 unresolved TODOs in changed files
-
-  "...stay."
-
-  checks failed. deploy anyway? [y/N]
+  Shiba  "sit. hold. today is Friday — are you sure about this deploy?. you know the rules."
 ```
 
-Each persona narrates the gate in character. Goldie is encouraging even when it fails. Shiba is not.
+Enable/disable the gate anytime:
+
+```bash
+goodboy sit --enable
+goodboy sit --disable
+```
+
+Each persona narrates the gate in character. Goldie is supportive even when she blocks you. Shiba is not.
 
 ---
 
