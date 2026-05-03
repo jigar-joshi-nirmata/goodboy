@@ -6,6 +6,10 @@
 
 ---
 
+![goodboy advertisement](demo-ad.gif)
+
+---
+
 ![goodboy demo](demo.gif)
 
 ---
