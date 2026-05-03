@@ -6,3 +6,4 @@ dist/
 /tmp/goodboy-session*.json
 cropped/
 dog_quips_json*
+content/archive/
