@@ -1,524 +1,388 @@
 #!/usr/bin/env python3
 """
-goodboy-claude advertisement video generator
-Creates a polished, advertisement-style video showing each persona reacting to events.
+goodboy-claude advertisement video.
+Uses real pixel-art dog sprites from sprites/{persona}/{mood}.jpg
+Sequence: hero banner → pack intro → 3 persona reactions → deploy gate → outro
 """
-from PIL import Image, ImageDraw, ImageFont
-import subprocess, os, math, shutil
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
+import subprocess, os, math
 
-# ─── CONFIG ─────────────────────────────────────────────────────────
-W, H = 1280, 720
-FPS = 30
-OUT_DIR = "/tmp/goodboy_frames"
-MONO_FONT = "/System/Library/Fonts/SFNSMono.ttf"
-BODY_FONT = "/System/Library/Fonts/SFNSMono.ttf"
+W, H   = 1280, 720
+FPS    = 30
+OUT    = "/tmp/goodboy_ad_frames"
+MONO   = "/System/Library/Fonts/SFNSMono.ttf"
 
-# Dracula palette
-BG      = (40,  42,  54)   # #282a36
-SURFACE = (68,  71,  90)   # #44475a
-FG      = (248, 248, 242)  # #f8f8f2
-COMMENT = (98,  114, 164)  # #6272a4
-CYAN    = (139, 233, 253)  # #8be9fd
-GREEN   = (80,  250, 123)  # #50fa7b
-ORANGE  = (255, 184, 108)  # #ffb86c
-PINK    = (255, 121, 198)  # #ff79c6
-PURPLE  = (189, 147, 249)  # #bd93f9
-RED     = (255, 85,  85)   # #ff5555
-YELLOW  = (241, 250, 140)  # #f1fa8c
+BG     = (14, 14, 20)
+DIM    = (38, 40, 54)
+FG     = (240, 240, 235)
+MUTED  = (90, 95, 120)
+GREEN  = (80, 250, 123)
+RED    = (255, 85,  85)
 
-PERSONAS = [
+PERSONA_COLORS = {
+    "goldie": (241, 196,  15),
+    "byte":   ( 52, 152, 219),
+    "shiba":  (230, 126,  34),
+    "pugsy":  (155,  89, 182),
+    "nova":   (200, 210, 220),
+    "debug":  ( 46, 204, 113),
+}
+
+REACTIONS = [
     {
-        "id": "goldie",
-        "name": "GOLDIE",
-        "breed": "Golden Retriever",
-        "color": (255, 215, 0),
-        "accent": (255, 165, 0),
-        "mood": "alarmed",
-        "art": [
-            "  /^\\ !",
-            " (°O°)!!",
-            "  )🎀(",
-            " /|  |\\",
-        ],
-        "event": "rm -rf detected",
-        "quip": "OH NO!! OH NO OH NO!! please tell me\nyou meant to do that!!",
-        "tagline": "enthusiastic optimist"
+        "persona": "goldie",
+        "event":   "rm -rf / detected",
+        "mood":    "alarmed",
+        "quip":    "WAIT WAIT WAIT that's the whole filesystem!!",
+        "badge_color": RED,
     },
     {
-        "id": "shiba",
-        "name": "SHIBA",
-        "breed": "Shiba Inu",
-        "color": (255, 140, 0),
-        "accent": (255, 100, 0),
-        "mood": "judgy",
-        "art": [
-            " _/ᴥ\\_",
-            " ( ._.) ",
-            "  )🎍(",
-            "  |  |",
-        ],
-        "event": "git push --force",
-        "quip": "force push. brave. foolish.\nsame thing.",
-        "tagline": "sassy and independent"
+        "persona": "shiba",
+        "event":   "deployed to production",
+        "mood":    "excited",
+        "quip":    "shipped. you're welcome.",
+        "badge_color": GREEN,
     },
     {
-        "id": "byte",
-        "name": "BYTE",
-        "breed": "Border Collie",
-        "color": (74, 158, 255),
-        "accent": (100, 180, 255),
-        "mood": "excited",
-        "art": [
-            "  /◉\\ ★",
-            " (^ᴥ^)♪",
-            "  )📟(",
-            " _|  |_",
-        ],
-        "event": "all tests passing",
-        "quip": "test suite: 100% passing.\nperformance: optimal. shipping.",
-        "tagline": "focused and analytical"
-    },
-    {
-        "id": "nova",
-        "name": "NOVA",
-        "breed": "Siberian Husky",
-        "color": (0, 212, 255),
-        "accent": (100, 230, 255),
-        "mood": "excited",
-        "art": [
-            "  /Δ\\ /",
-            " (^ᴥ^)!!",
-            "  )❄(",
-            "_/|  |\\_",
-        ],
-        "event": "deploy complete",
-        "quip": "DEPLOY DONE. PRODUCTION: LIVE.\nTHAT IS HOW WE DO IT.",
-        "tagline": "maximum energy, always"
+        "persona": "byte",
+        "event":   "3 errors in a row",
+        "mood":    "judgy",
+        "quip":    "error rate: 100%. intervention recommended.",
+        "badge_color": RED,
     },
 ]
 
-# ─── HELPERS ────────────────────────────────────────────────────────
-def font(path, size):
+os.makedirs(OUT, exist_ok=True)
+
+def fnt(size: int) -> ImageFont.FreeTypeFont:
     try:
-        return ImageFont.truetype(path, size)
+        return ImageFont.truetype(MONO, size)
     except:
         return ImageFont.load_default()
 
-def easeInOut(t):
-    return t * t * (3 - 2 * t)
+def ease_out(t: float) -> float:
+    t = max(0.0, min(1.0, t))
+    return 1 - (1 - t) ** 3
 
-def lerp(a, b, t):
-    return int(a + (b - a) * t)
+def lerp(a: float, b: float, t: float) -> float:
+    return a + (b - a) * t
 
-def lerp_color(c1, c2, t):
-    return tuple(lerp(a, b, t) for a, b in zip(c1, c2))
+def blend(base: Image.Image, over: Image.Image, alpha: float) -> Image.Image:
+    base = base.convert("RGBA")
+    over = over.convert("RGBA")
+    r, g, b, a = over.split()
+    a = a.point(lambda p: int(p * alpha))
+    over = Image.merge("RGBA", (r, g, b, a))
+    base.paste(over, (0, 0), over)
+    return base.convert("RGB")
 
-def alpha_composite(img, overlay_color, alpha):
-    """Simple alpha blend"""
-    r,g,b = overlay_color
-    arr = img.copy()
-    w, h = arr.size
-    for px in range(w):
-        for py in range(h):
-            or_, og, ob, oa = arr.getpixel((px, py))
-            nr = int(or_ * (1 - alpha) + r * alpha)
-            ng = int(og * (1 - alpha) + g * alpha)
-            nb = int(ob * (1 - alpha) + b * alpha)
-            arr.putpixel((px, py), (nr, ng, nb, oa))
-    return arr
+def fit(img: Image.Image, tw: int, th: int) -> Image.Image:
+    iw, ih = img.size
+    scale  = max(tw / iw, th / ih)
+    nw, nh = int(iw * scale), int(ih * scale)
+    img    = img.resize((nw, nh), Image.LANCZOS)
+    x, y   = (nw - tw) // 2, (nh - th) // 2
+    return img.crop((x, y, x + tw, y + th))
 
-def draw_rounded_rect(draw, xy, radius, fill, outline=None, outline_width=2):
-    x1, y1, x2, y2 = xy
-    draw.rounded_rectangle([x1, y1, x2, y2], radius=radius, fill=fill,
-                           outline=outline, width=outline_width)
+def dark(img: Image.Image, strength: float = 0.45) -> Image.Image:
+    overlay = Image.new("RGBA", img.size, (0, 0, 0, int(255 * strength)))
+    out = img.convert("RGBA")
+    out.paste(overlay, mask=overlay)
+    return out.convert("RGB")
 
-def draw_text_shadow(draw, pos, text, font_obj, fill, shadow_color=(0,0,0), offset=2):
-    draw.text((pos[0]+offset, pos[1]+offset), text, font=font_obj, fill=shadow_color)
-    draw.text(pos, text, font=font_obj, fill=fill)
+def base() -> Image.Image:
+    return Image.new("RGB", (W, H), BG)
 
-def text_width(draw, text, font_obj):
-    bbox = draw.textbbox((0,0), text, font=font_obj)
-    return bbox[2] - bbox[0]
+def load_sprite(persona: str, mood: str, scale: int = 4) -> Image.Image | None:
+    for ext in ("jpg", "png"):
+        p = f"sprites/{persona}/{mood}.{ext}"
+        if os.path.exists(p):
+            img = Image.open(p).convert("RGBA")
+            w, h = img.size
+            return img.resize((w * scale, h * scale), Image.NEAREST)
+    return None
 
-def text_height(draw, text, font_obj):
-    bbox = draw.textbbox((0,0), text, font=font_obj)
-    return bbox[3] - bbox[1]
+def load_hero(persona: str) -> Image.Image | None:
+    p = f"sprites/{persona}/hero.png"
+    if os.path.exists(p):
+        return Image.open(p).convert("RGBA")
+    return None
 
-# ─── FRAME RENDERERS ────────────────────────────────────────────────
-def make_base_frame():
-    img = Image.new("RGB", (W, H), BG)
-    draw = ImageDraw.Draw(img)
-    # Subtle gradient bars at top/bottom
-    for y in range(80):
-        alpha = (80-y)/80 * 0.15
-        c = lerp_color(SURFACE, BG, 1-alpha)
-        draw.line([(0,y),(W,y)], fill=c)
-    for y in range(H-80, H):
-        alpha = (y-(H-80))/80 * 0.15
-        c = lerp_color(SURFACE, BG, 1-alpha)
-        draw.line([(0,y),(W,y)], fill=c)
-    return img, draw
+def text_center(draw: ImageDraw.ImageDraw, text: str, y: int, size: int,
+                color: tuple, img_w: int = W) -> None:
+    f = fnt(size)
+    bbox = draw.textbbox((0, 0), text, font=f)
+    x = (img_w - (bbox[2] - bbox[0])) // 2
+    draw.text((x, y), text, font=f, fill=color)
 
-def draw_grid(draw):
-    """Subtle dot grid background"""
-    for x in range(0, W, 40):
-        for y in range(0, H, 40):
-            draw.ellipse([x-1, y-1, x+1, y+1], fill=(60, 62, 76))
+def draw_badge(draw: ImageDraw.ImageDraw, text: str, cx: int, y: int,
+               color: tuple, size: int = 20) -> None:
+    f = fnt(size)
+    bbox = draw.textbbox((0, 0), text, font=f)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    px, py = 20, 10
+    bw, bh = tw + px * 2, th + py * 2
+    bx = cx - bw // 2
+    draw.rounded_rectangle([bx, y, bx + bw, y + bh], radius=8,
+                           fill=(*color[:3], 30), outline=color, width=2)
+    draw.text((bx + px, y + py), text, font=f, fill=color)
 
-def draw_logo(draw, alpha=1.0):
-    f_large = font(BODY_FONT, 22)
-    f_small = font(BODY_FONT, 13)
-    color = tuple(int(c * alpha) for c in CYAN)
-    draw.text((40, 32), "goodboy-claude", font=f_large, fill=color)
-    subdued = tuple(int(c * alpha) for c in COMMENT)
-    draw.text((40, 58), "npm install -g goodboy-claude", font=f_small, fill=subdued)
-
-def persona_card_frame(persona, t, phase):
-    """
-    t: 0.0 → 1.0 within this card's total duration
-    phase: 'enter' | 'hold' | 'exit'
-    """
-    img, draw = make_base_frame()
-    draw_grid(draw)
-
-    color = persona["color"]
-    accent = persona["accent"]
-
-    # ── slide/fade in ──
-    if phase == "enter":
-        slide = easeInOut(t)
-        card_alpha = t
-    elif phase == "exit":
-        slide = 1.0
-        card_alpha = 1.0 - t
-    else:
-        slide = 1.0
-        card_alpha = 1.0
-
-    card_x_offset = int((1.0 - slide) * 80)
-
-    # ── Left panel: persona identity ──
-    panel_x = 60 + card_x_offset
-    panel_y = 120
-    panel_w = 460
-    panel_h = 460
-
-    # Glow effect behind card
-    for glow in range(20, 0, -1):
-        ga = 0.015 * (21 - glow) * card_alpha
-        gc = tuple(int(c * ga) for c in color)
-        draw.rounded_rectangle(
-            [panel_x - glow, panel_y - glow,
-             panel_x + panel_w + glow, panel_y + panel_h + glow],
-            radius=24 + glow, fill=gc
-        )
-
-    draw_rounded_rect(draw,
-        [panel_x, panel_y, panel_x + panel_w, panel_y + panel_h],
-        radius=20,
-        fill=SURFACE,
-        outline=color, outline_width=2
-    )
-
-    f_name = font(MONO_FONT, 52)
-    f_breed = font(MONO_FONT, 16)
-    f_ascii = font(MONO_FONT, 28)
-    f_tag = font(MONO_FONT, 14)
-
-    # Name
-    name_color = tuple(int(c * card_alpha) for c in color)
-    draw.text((panel_x + 30, panel_y + 30), persona["name"],
-              font=f_name, fill=name_color)
-
-    # Breed tag
-    breed_color = tuple(int(c * card_alpha) for c in COMMENT)
-    draw.text((panel_x + 34, panel_y + 94), persona["breed"],
-              font=f_breed, fill=breed_color)
-
-    # Separator line
-    sep_color = tuple(int(c * card_alpha) for c in color)
-    draw.line([(panel_x + 30, panel_y + 120),
-               (panel_x + panel_w - 30, panel_y + 120)],
-              fill=sep_color, width=1)
-
-    # ASCII art — large and colored
-    art_y = panel_y + 145
-    for line in persona["art"]:
-        art_color = tuple(int(c * card_alpha) for c in accent)
-        draw_text_shadow(draw, (panel_x + 40, art_y), line, f_ascii, art_color)
-        art_y += 54
-
-    # Tagline
-    tag_color = tuple(int(c * card_alpha) for c in COMMENT)
-    draw.text((panel_x + 34, panel_y + panel_h - 50),
-              f"— {persona['tagline']}", font=f_tag, fill=tag_color)
-
-    # ── Right panel: event + quip ──
-    rp_x = panel_x + panel_w + 50
-    rp_y = 120
-    rp_w = W - rp_x - 60
-    rp_h = panel_h
-
-    draw_rounded_rect(draw,
-        [rp_x, rp_y, rp_x + rp_w, rp_y + rp_h],
-        radius=20,
-        fill=(50, 52, 64),
-        outline=SURFACE, outline_width=1
-    )
-
-    f_event_label = font(MONO_FONT, 12)
-    f_event = font(MONO_FONT, 18)
-    f_quip = font(MONO_FONT, 22)
-
-    # Event badge
-    badge_alpha = card_alpha
-    badge_bg = tuple(int(c * 0.3 * badge_alpha) for c in color)
-    badge_color = tuple(int(c * badge_alpha) for c in color)
-
-    draw.text((rp_x + 30, rp_y + 30),
-              "event detected:", font=f_event_label,
-              fill=tuple(int(c * badge_alpha) for c in COMMENT))
-    draw.text((rp_x + 30, rp_y + 50),
-              persona["event"], font=f_event, fill=badge_color)
-
-    # Quip box
-    qbox_y = rp_y + 130
-    qbox_h = 180
-    draw_rounded_rect(draw,
-        [rp_x + 20, qbox_y, rp_x + rp_w - 20, qbox_y + qbox_h],
-        radius=12,
-        fill=BG,
-        outline=tuple(int(c * card_alpha) for c in SURFACE), outline_width=1
-    )
-
-    # Opening quote
-    f_quote_mark = font(MONO_FONT, 48)
-    q_color = tuple(int(c * 0.3 * card_alpha) for c in color)
-    draw.text((rp_x + 32, qbox_y + 5), "“", font=f_quote_mark, fill=q_color)
-
-    # Quip text
-    quip_lines = persona["quip"].split("\n")
-    q_y = qbox_y + 55
-    for qline in quip_lines:
-        q_text_color = tuple(int(c * card_alpha) for c in FG)
-        draw.text((rp_x + 40, q_y), qline, font=f_quip, fill=q_text_color)
-        q_y += 35
-
-    # Mood indicator
-    mood_y = rp_y + rp_h - 70
-    mood_colors = {
-        "alarmed": RED, "judgy": ORANGE,
-        "excited": GREEN, "happy": CYAN,
-        "sad": PURPLE, "sleepy": COMMENT,
-        "proud": YELLOW, "disgusted": PINK
-    }
-    mood_c = mood_colors.get(persona["mood"], CYAN)
-    m_color = tuple(int(c * card_alpha) for c in mood_c)
-    draw.ellipse([rp_x + 30, mood_y + 8, rp_x + 46, mood_y + 24], fill=m_color)
-    f_mood = font(MONO_FONT, 15)
-    draw.text((rp_x + 54, mood_y + 5), f"mood: {persona['mood']}",
-              font=f_mood, fill=m_color)
-
-    # Logo always visible
-    draw_logo(draw, alpha=card_alpha * 0.9 + 0.1)
-
-    # Frame number dot at bottom center
-    dot_color = tuple(int(c * card_alpha) for c in color)
-    idx = PERSONAS.index(persona)
-    total = len(PERSONAS)
-    dot_spacing = 24
-    start_x = W // 2 - (total * dot_spacing) // 2
-    for i in range(total):
-        cx = start_x + i * dot_spacing + 12
-        cy = H - 36
-        if i == idx:
-            draw.ellipse([cx-7, cy-7, cx+7, cy+7], fill=dot_color)
+def draw_quip_box(draw: ImageDraw.ImageDraw, text: str, cx: int, y: int,
+                  color: tuple, max_w: int = 740) -> int:
+    f = fnt(24)
+    words = text.split()
+    lines, cur = [], ""
+    for w in words:
+        test = (cur + " " + w).strip()
+        bbox = draw.textbbox((0, 0), test, font=f)
+        if bbox[2] - bbox[0] > max_w - 60:
+            if cur:
+                lines.append(cur)
+            cur = w
         else:
-            draw.ellipse([cx-4, cy-4, cx+4, cy+4],
-                         fill=tuple(int(c * 0.3) for c in COMMENT))
+            cur = test
+    if cur:
+        lines.append(cur)
+    lh     = 36
+    bh     = len(lines) * lh + 44
+    bw     = max_w
+    bx     = cx - bw // 2
+    draw.rounded_rectangle([bx, y, bx + bw, y + bh], radius=14,
+                           fill=DIM, outline=color, width=2)
+    for i, line in enumerate(lines):
+        bbox = draw.textbbox((0, 0), line, font=f)
+        lw = bbox[2] - bbox[0]
+        draw.text((cx - lw // 2, y + 22 + i * lh), line, font=f, fill=FG)
+    return bh
 
-    return img
+# ── SLIDE BUILDERS ────────────────────────────────────────────────────
 
-def title_frame(t, phase):
-    img, draw = make_base_frame()
-    draw_grid(draw)
+def slide_image(path: str, alpha: float = 1.0, darkness: float = 0.0) -> Image.Image:
+    img = Image.open(path).convert("RGB")
+    img = fit(img, W, H)
+    if darkness > 0:
+        img = dark(img, darkness)
+    fr  = base()
+    return blend(fr, img, alpha)
 
-    if phase == "enter":
-        alpha = easeInOut(t)
-    elif phase == "exit":
-        alpha = 1.0 - easeInOut(t)
-    else:
-        alpha = 1.0
+def slide_reaction(persona: str, event: str, mood: str, quip: str,
+                   badge_color: tuple, t: float) -> Image.Image:
+    color = PERSONA_COLORS[persona]
+    fr    = base()
 
-    f_headline = font(MONO_FONT, 68)
-    f_sub = font(MONO_FONT, 24)
-    f_small = font(MONO_FONT, 16)
+    # Subtle radial glow behind dog
+    glow = Image.new("RGB", (W, H), BG)
+    gd   = ImageDraw.Draw(glow)
+    for r in range(260, 0, -10):
+        alpha_v = int(18 * (1 - r / 260))
+        gd.ellipse([(W // 2 - r, 240 - r // 2), (W // 2 + r, 240 + r + r // 2)],
+                   fill=(*color[:3],))
+    glow = glow.filter(ImageFilter.GaussianBlur(radius=40))
+    fr = blend(fr, glow, 0.35)
 
-    # Animated color cycle through persona colors
-    colors = [p["color"] for p in PERSONAS]
-    ci = int(t * len(colors)) % len(colors)
-    tc = lerp_color(colors[ci], colors[(ci+1) % len(colors)], (t * len(colors)) % 1.0)
-    headline_color = tuple(int(c * alpha) for c in tc)
-    fg_color = tuple(int(c * alpha) for c in FG)
-    comment_color = tuple(int(c * alpha) for c in COMMENT)
+    draw = ImageDraw.Draw(fr)
 
-    # Main headline
-    headline = "your terminal"
-    headline2 = "has been lonely."
-    tw1 = text_width(draw, headline, f_headline)
-    tw2 = text_width(draw, headline2, f_headline)
-    draw_text_shadow(draw, (W//2 - tw1//2, H//2 - 130), headline, f_headline,
-                     fg_color, shadow_color=(20,20,30), offset=3)
-    draw_text_shadow(draw, (W//2 - tw2//2, H//2 - 40), headline2, f_headline,
-                     headline_color, shadow_color=(20,20,30), offset=3)
+    # Phase 1 (0→0.33): persona name fades in from top
+    p1 = ease_out(t * 3)
+    name_y = int(30 + (1 - p1) * -30)
+    f_name = fnt(68)
+    bbox = draw.textbbox((0, 0), persona.upper(), font=f_name)
+    nw = bbox[2] - bbox[0]
+    draw.text(((W - nw) // 2, name_y), persona.upper(),
+              font=f_name, fill=(*color, int(255 * p1)))
 
-    # Subtitle
-    sub = "introducing goodboy-claude"
-    tw_sub = text_width(draw, sub, f_sub)
-    draw.text((W//2 - tw_sub//2, H//2 + 70), sub, font=f_sub,
-              fill=tuple(int(c * alpha) for c in CYAN))
+    # Hero portrait (fades in with phase 1)
+    hero = load_hero(persona)
+    if hero and p1 > 0.05:
+        hw = int(min(hero.size[0], 520))
+        hh = int(hero.size[1] * hw / hero.size[0])
+        hero_r = hero.resize((hw, hh), Image.LANCZOS)
+        hx = W // 2 - hw // 2
+        hy = 118
+        r_, g_, b_, a_ = hero_r.split()
+        a_ = a_.point(lambda p: min(p, int(255 * p1)))
+        hero_r = Image.merge("RGBA", (r_, g_, b_, a_))
+        fr.paste(hero_r, (hx, hy), hero_r)
 
-    # Tag
-    tag = "a Tamagotchi for your terminal  ·  6 personas  ·  720 handwritten quips"
-    tw_tag = text_width(draw, tag, f_small)
-    draw.text((W//2 - tw_tag//2, H//2 + 115), tag, font=f_small, fill=comment_color)
+    # Phase 2 (0.3→0.6): event badge slides in from right
+    p2 = ease_out(max(0.0, (t - 0.3) / 0.3))
+    if p2 > 0.02:
+        badge_x = int(W // 2 + (1 - p2) * 400)
+        draw2 = ImageDraw.Draw(fr)
+        draw_badge(draw2, f"⚡  {event}", badge_x, 390, badge_color, 22)
 
-    draw_logo(draw, alpha=alpha)
-    return img
+    # Phase 3 (0.5→0.75): mood sprite pops in (replaces hero area slightly)
+    p3 = ease_out(max(0.0, (t - 0.5) / 0.25))
+    if p3 > 0.05:
+        sprite = load_sprite(persona, mood, scale=5)
+        if sprite:
+            sw, sh = sprite.size
+            sx = W // 2 - sw // 2
+            sy = 420 - sh // 2
+            r_, g_, b_, a_ = sprite.split()
+            a_ = a_.point(lambda p: min(p, int(255 * p3)))
+            sprite = Image.merge("RGBA", (r_, g_, b_, a_))
+            fr.paste(sprite, (sx, sy), sprite)
 
-def outro_frame(t, phase):
-    img, draw = make_base_frame()
-    draw_grid(draw)
+    # Phase 4 (0.7→1.0): quip box appears
+    p4 = ease_out(max(0.0, (t - 0.7) / 0.3))
+    if p4 > 0.05:
+        qfr = base()
+        qd  = ImageDraw.Draw(qfr)
+        draw_quip_box(qd, f'"{quip}"', W // 2, 530, color)
+        fr = blend(fr, qfr, p4)
 
-    if phase == "enter":
-        alpha = easeInOut(t)
-    elif phase == "exit":
-        alpha = 1.0 - easeInOut(t)
-    else:
-        alpha = 1.0
+    # Bottom accent bar
+    draw3 = ImageDraw.Draw(fr)
+    bar_w = int(W * p1)
+    draw3.line([(W // 2 - bar_w // 2, H - 6),
+                (W // 2 + bar_w // 2, H - 6)], fill=color, width=5)
 
-    f_cmd = font(MONO_FONT, 36)
-    f_sub = font(MONO_FONT, 18)
-    f_small = font(MONO_FONT, 14)
+    return fr
+
+def slide_outro(t: float) -> Image.Image:
+    fr   = base()
+    draw = ImageDraw.Draw(fr)
+
+    p1 = ease_out(min(t * 2, 1.0))
+
+    # Title
+    text_center(draw, "goodboy-claude", 160, 58, (*FG, int(255 * p1)))
+    text_center(draw, "a tamagotchi for your terminal", 236, 24, (*MUTED, int(255 * p1)))
 
     # Install command box
-    box_w, box_h = 680, 90
-    box_x, box_y = W//2 - box_w//2, H//2 - box_h//2 - 40
-
-    box_color = tuple(int(c * alpha) for c in SURFACE)
-    border_color = tuple(int(c * alpha) for c in GREEN)
-    draw_rounded_rect(draw, [box_x, box_y, box_x+box_w, box_y+box_h],
-                      radius=16, fill=box_color, outline=border_color, outline_width=2)
-
-    cmd = "npm install -g goodboy-claude"
-    tw = text_width(draw, cmd, f_cmd)
-    cmd_color = tuple(int(c * alpha) for c in GREEN)
-    draw_text_shadow(draw, (W//2 - tw//2, box_y + 22), cmd, f_cmd, cmd_color,
-                     shadow_color=(0,0,0), offset=2)
-
-    sub = "then: goodboy init"
-    tw_sub = text_width(draw, sub, f_sub)
-    sub_color = tuple(int(c * alpha) for c in CYAN)
-    draw.text((W//2 - tw_sub//2, box_y + box_h + 20), sub, font=f_sub, fill=sub_color)
+    p2 = ease_out(max(0.0, (t - 0.3) / 0.4))
+    if p2 > 0.02:
+        cmd = "npm install -g @terminaldogs/goodboy-claude"
+        f   = fnt(28)
+        bbox = draw.textbbox((0, 0), cmd, font=f)
+        cw  = bbox[2] - bbox[0]
+        pad = 28
+        bx  = W // 2 - cw // 2 - pad
+        by  = 300
+        draw.rounded_rectangle([bx, by, bx + cw + pad * 2, by + 58],
+                               radius=12, fill=DIM)
+        draw.text((W // 2 - cw // 2, by + 14), cmd,
+                  font=f, fill=(*GREEN, int(255 * p2)))
 
     # Links
-    links = [
-        "github.com/jigar-joshi-nirmata/goodboy",
-        "npmjs.com/package/goodboy-claude",
-    ]
-    link_y = H - 100
-    for link in links:
-        tw = text_width(draw, link, f_small)
-        link_color = tuple(int(c * alpha) for c in COMMENT)
-        draw.text((W//2 - tw//2, link_y), link, font=f_small, fill=link_color)
-        link_y += 24
+    p3 = ease_out(max(0.0, (t - 0.6) / 0.3))
+    if p3 > 0.02:
+        text_center(draw, "npmjs.com/package/@terminaldogs/goodboy-claude", 390, 18,
+                    (*MUTED, int(200 * p3)))
 
-    draw_logo(draw, alpha=alpha)
-    return img
+    # 6-dog sprite lineup at bottom
+    p4 = ease_out(max(0.0, (t - 0.45) / 0.4))
+    PERSONAS = ["goldie", "byte", "shiba", "pugsy", "nova", "debug"]
+    slot = W // len(PERSONAS)
+    for i, persona in enumerate(PERSONAS):
+        sp = load_sprite(persona, "happy", scale=3)
+        if sp and p4 > 0.02:
+            sw, sh = sp.size
+            sx = i * slot + slot // 2 - sw // 2
+            sy = H - sh - 55
+            r_, g_, b_, a_ = sp.split()
+            a_ = a_.point(lambda px: min(px, int(255 * p4)))
+            sp = Image.merge("RGBA", (r_, g_, b_, a_))
+            fr.paste(sp, (sx, sy), sp)
+            # Name label
+            c = PERSONA_COLORS[persona]
+            fn = fnt(16)
+            bbox = draw.textbbox((0, 0), persona, font=fn)
+            lw = bbox[2] - bbox[0]
+            draw.text((i * slot + slot // 2 - lw // 2, H - 34),
+                      persona, font=fn, fill=(*c, int(200 * p4)))
 
-# ─── SCENE SCHEDULE ─────────────────────────────────────────────────
-def frames_for_scene(scene_type, data, enter_f, hold_f, exit_f):
-    frames = []
-    for i in range(enter_f):
-        t = i / max(enter_f - 1, 1)
-        if scene_type == "title":
-            frames.append(title_frame(t, "enter"))
-        elif scene_type == "persona":
-            frames.append(persona_card_frame(data, t, "enter"))
-        elif scene_type == "outro":
-            frames.append(outro_frame(t, "enter"))
-    for i in range(hold_f):
-        t = i / max(hold_f - 1, 1)
-        if scene_type == "title":
-            frames.append(title_frame(t, "hold"))
-        elif scene_type == "persona":
-            frames.append(persona_card_frame(data, t, "hold"))
-        elif scene_type == "outro":
-            frames.append(outro_frame(t, "hold"))
-    for i in range(exit_f):
-        t = i / max(exit_f - 1, 1)
-        if scene_type == "title":
-            frames.append(title_frame(t, "exit"))
-        elif scene_type == "persona":
-            frames.append(persona_card_frame(data, t, "exit"))
-        elif scene_type == "outro":
-            frames.append(outro_frame(t, "exit"))
+    return fr
+
+# ── TIMELINE ──────────────────────────────────────────────────────────
+
+def crossfade(a: Image.Image, b_fn, frames: int = 18):
+    for i in range(frames):
+        t = i / frames
+        b = b_fn(0.001)
+        yield blend(a, b, t)
+
+def timeline():
+    frames: list[Image.Image] = []
+
+    def emit(img: Image.Image):
+        frames.append(img)
+
+    # 1. Hero banner (0-2.5s = 75f)
+    banner_frames = []
+    for i in range(75):
+        alpha = ease_out(min(i / 20, 1.0))
+        f = slide_image("sprites/hero-banner.png", alpha=alpha, darkness=0.12)
+        banner_frames.append(f)
+        emit(f)
+
+    # 2. Crossfade → pick-companion (15f), hold 2.5s (75f)
+    companion = fit(Image.open("sprites/pick-companion.png").convert("RGB"), W, H)
+    for f in crossfade(banner_frames[-1], lambda _: companion):
+        emit(f)
+    for _ in range(75):
+        emit(companion)
+
+    # 3-5. Reaction cards (each: 15f crossfade + 90f hold)
+    prev = companion
+    for rx in REACTIONS:
+        first = slide_reaction(t=0.001, **rx)
+        for f in crossfade(prev, lambda _, r=rx: slide_reaction(t=0.001, **r)):
+            emit(f)
+        rx_frames = []
+        for i in range(90):
+            t = min(i / 55, 1.0)
+            f = slide_reaction(t=t, **rx)
+            rx_frames.append(f)
+            emit(f)
+        prev = rx_frames[-1]
+
+    # 6. Deploy gate (15f crossfade, 2.5s hold)
+    gate = fit(Image.open("sprites/deploy-gate.png").convert("RGB"), W, H)
+    for f in crossfade(prev, lambda _: gate):
+        emit(f)
+    for _ in range(75):
+        emit(gate)
+
+    # 7. Outro (15f crossfade, 3s)
+    outro0 = slide_outro(0.001)
+    for f in crossfade(gate, lambda _: slide_outro(0.001)):
+        emit(f)
+    for i in range(90):
+        t = i / 60
+        emit(slide_outro(min(t, 1.0)))
+
     return frames
 
-# ─── MAIN ───────────────────────────────────────────────────────────
-def main():
-    os.makedirs(OUT_DIR, exist_ok=True)
+# ── RENDER ────────────────────────────────────────────────────────────
+print("Building timeline...")
+all_frames = timeline()
+total = len(all_frames)
+print(f"Rendering {total} frames at {FPS}fps ({total/FPS:.1f}s)...")
 
-    all_frames = []
+for i, frame in enumerate(all_frames):
+    frame.save(os.path.join(OUT, f"{i:05d}.png"))
+    if i % 30 == 0:
+        print(f"  {i}/{total}", end="\r", flush=True)
 
-    # Title: 1s enter, 2.5s hold, 0.5s exit
-    all_frames += frames_for_scene("title", None,
-        enter_f=int(FPS*0.8), hold_f=int(FPS*2.2), exit_f=int(FPS*0.5))
+print(f"\nEncoding mp4...")
+subprocess.run([
+    "ffmpeg", "-y", "-framerate", str(FPS),
+    "-i", f"{OUT}/%05d.png",
+    "-c:v", "libx264", "-pix_fmt", "yuv420p",
+    "-crf", "18", "-preset", "slow",
+    "demo-ad.mp4"
+], check=True, capture_output=True)
 
-    # Each persona: 0.4s enter, 2.5s hold, 0.4s exit
-    for persona in PERSONAS:
-        all_frames += frames_for_scene("persona", persona,
-            enter_f=int(FPS*0.4), hold_f=int(FPS*2.4), exit_f=int(FPS*0.4))
+print("Generating GIF...")
+subprocess.run([
+    "ffmpeg", "-y", "-i", "demo-ad.mp4",
+    "-vf", "fps=20,scale=960:-1:flags=lanczos,split[s0][s1];"
+           "[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer",
+    "-loop", "0", "demo-ad.gif"
+], check=True, capture_output=True)
 
-    # Outro: 0.8s enter, 3s hold, 0s exit
-    all_frames += frames_for_scene("outro", None,
-        enter_f=int(FPS*0.8), hold_f=int(FPS*3.0), exit_f=0)
-
-    print(f"Rendering {len(all_frames)} frames at {FPS}fps ({len(all_frames)/FPS:.1f}s)...")
-
-    for i, frame in enumerate(all_frames):
-        path = f"{OUT_DIR}/frame_{i:05d}.png"
-        frame.save(path)
-        if i % 30 == 0:
-            print(f"  {i}/{len(all_frames)} frames", end="\r")
-
-    print(f"\nCombining into video...")
-    # MP4
-    subprocess.run([
-        "ffmpeg", "-y",
-        "-framerate", str(FPS),
-        "-i", f"{OUT_DIR}/frame_%05d.png",
-        "-c:v", "libx264",
-        "-pix_fmt", "yuv420p",
-        "-crf", "18",
-        "-preset", "slow",
-        "demo-ad.mp4"
-    ], check=True, capture_output=True)
-
-    # GIF (optimized)
-    subprocess.run([
-        "ffmpeg", "-y",
-        "-i", "demo-ad.mp4",
-        "-vf", f"fps={FPS},scale={W}:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer",
-        "demo-ad.gif"
-    ], check=True, capture_output=True)
-
-    size_mp4 = os.path.getsize("demo-ad.mp4") / 1024
-    size_gif = os.path.getsize("demo-ad.gif") / 1024
-    print(f"demo-ad.mp4  {size_mp4:.0f}KB")
-    print(f"demo-ad.gif  {size_gif:.0f}KB")
-    shutil.rmtree(OUT_DIR)
-    print("Done.")
-
-if __name__ == "__main__":
-    main()
+mp4_kb = os.path.getsize("demo-ad.mp4") // 1024
+gif_kb = os.path.getsize("demo-ad.gif") // 1024
+print(f"demo-ad.mp4  {mp4_kb}KB\ndemo-ad.gif  {gif_kb}KB\nDone.")

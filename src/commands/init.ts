@@ -94,4 +94,15 @@ export async function runInit(args: string[]): Promise<void> {
   console.log(dim('  run `goodboy switch <persona>` to change companions'))
   console.log(dim('  run `goodboy help` for all commands'))
   console.log()
+
+  // AI quips hint
+  const hasKey = !!process.env.ANTHROPIC_API_KEY
+  if (hasKey) {
+    console.log(c('  ✓') + dim(' ANTHROPIC_API_KEY detected — AI quips enabled at session end'))
+  } else {
+    console.log(dim('  tip: add ANTHROPIC_API_KEY to your shell profile for AI-generated quips'))
+    console.log(dim('       echo \'export ANTHROPIC_API_KEY=sk-ant-...\' >> ~/.zshrc'))
+    console.log(dim('       (costs ~$0.00005/session via Claude Haiku — optional)'))
+  }
+  console.log()
 }
