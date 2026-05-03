@@ -1,6 +1,6 @@
 {
-  "name": "goodboy-claude",
-  "version": "0.1.0",
+  "name": "@terminaldogs/goodboy-claude",
+  "version": "0.1.1",
   "description": "A Tamagotchi for your terminal. Pick a dog. Ship code together.",
   "main": "dist/index.js",
   "bin": {
@@ -20,9 +20,21 @@
     "LICENSE"
   ],
   "keywords": [
-    "claude", "claude-code", "anthropic", "mcp", "plugin", "hook",
-    "terminal", "cli", "tamagotchi", "pet", "dog", "companion",
-    "developer-tools", "fun", "productivity"
+    "claude",
+    "claude-code",
+    "anthropic",
+    "mcp",
+    "plugin",
+    "hook",
+    "terminal",
+    "cli",
+    "tamagotchi",
+    "pet",
+    "dog",
+    "companion",
+    "developer-tools",
+    "fun",
+    "productivity"
   ],
   "author": {
     "name": "Jigar Joshi",
