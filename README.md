@@ -50,16 +50,55 @@ Switch anytime: `goodboy switch <name>`
 
 ## Commands
 
+**Care**
+
+| Command | Effect |
+|---|---|
+| `goodboy feed` | hunger +30. Dog does happy spin. |
+| `goodboy treat` | hunger +15. Small bonus treat. |
+| `goodboy bath` | hygiene +40. Dog is reluctant but cleaner. |
+| `goodboy nap` | energy +35. Dog genuinely sleeps. |
+| `goodboy walk` | energy +15, hunger -10. Enforced break. |
+| `goodboy brew` | energy +20. Coffee solidarity. |
+
+**Fun**
+
 | Command | What happens |
 |---|---|
-| `goodboy feed` | Restore hunger. Dog does happy spin. |
-| `goodboy bath` | Clean up after one too many `rm -rf` incidents. |
-| `goodboy brew` | Make coffee. Dog stares at you until you share. |
-| `goodboy nap` | Restore energy. Dog genuinely sleeps for a moment. |
-| `goodboy walk` | Enforced 5-min break. Dog physically drags you away. |
-| `goodboy status` | Full health report. Mood, hunger, streak, birthday. |
-| `goodboy rollover` | Does nothing useful. Dog rolls over. Perfect. |
-| `goodboy switch` | Change persona. Dog acts betrayed for 10 seconds. |
+| `goodboy rollover` | Classic trick. Always delightful. |
+| `goodboy trick` | Random trick. Requires energy > 20. |
+| `goodboy speak` | Random piece of per-persona wisdom. |
+| `goodboy fetch` | Runs `git fetch`, narrates what came back. |
+| `goodboy beg` | Dog makes a pointed request (tests, review, break). |
+
+**Status & Info**
+
+| Command | What it shows |
+|---|---|
+| `goodboy status` | Stat bars + mood + streak + experience level. |
+| `goodboy mood` | Current mood, what's causing it, how to fix it. |
+| `goodboy age` | Dog age, lifetime sessions, errors witnessed, deploys. |
+| `goodboy level` | Experience level with full progression ladder. |
+| `goodboy history` | Last 10 sessions from `~/.goodboy-log`. |
+| `goodboy diary` | This session's events as they happened. |
+| `goodboy report` | 7-day summary. `--month` for 30 days. |
+
+**Codebase Health**
+
+| Command | What it runs |
+|---|---|
+| `goodboy sniff` | TypeScript + ESLint + tests. Pass/fail with timing. |
+| `goodboy vet` | Full scan: test coverage, TODOs, console.logs, large files, TS errors. Health score out of 100. |
+
+**Configuration**
+
+| Command | What it does |
+|---|---|
+| `goodboy switch` | List all personas with colors. |
+| `goodboy switch <name>` | Change persona. Old dog says goodbye. New dog says hello. |
+| `goodboy ignore <signal>` | Suppress a signal reaction permanently. |
+| `goodboy ignore <signal> --remove` | Restore a suppressed signal. |
+| `goodboy init` | Auto-install Claude Code hooks into `~/.claude/settings.json`. |
 
 ---
 
