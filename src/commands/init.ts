@@ -3,7 +3,7 @@ import path from 'path'
 import os from 'os'
 import chalk from 'chalk'
 import { readState, writeState } from '../state.js'
-import { renderBlock } from '../renderer.js'
+import { renderBlock, detectProtocol } from '../renderer.js'
 import { getPersona, PERSONAS } from '../personas/index.js'
 import { PersonaId } from '../personas/types.js'
 
@@ -50,6 +50,7 @@ export async function runInit(args: string[]): Promise<void> {
   const state = readState()
   const isFirstRun = state.session_count === 0
   state.persona = persona
+  state.terminal_protocol = detectProtocol()
   writeState(state)
 
   const config = getPersona(persona)

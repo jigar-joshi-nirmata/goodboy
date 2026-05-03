@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { execSync } from 'child_process'
 import chalk from 'chalk'
 import { PersonaId, Mood, Protocol } from './personas/types.js'
 import { getPersona } from './personas/index.js'
@@ -13,12 +14,16 @@ export function detectProtocol(): Protocol {
 
   if (override) return override
 
-  if (term === 'xterm-kitty' || termProgram === 'WarpTerminal') return 'kitty'
-  if (termProgram === 'iTerm.app') return 'iterm2'
+  // Warp supports iTerm2 inline images natively (JPEG accepted)
+  if (termProgram === 'iTerm.app' || termProgram === 'WarpTerminal') return 'iterm2'
+  if (term === 'xterm-kitty') return 'kitty'
   return 'ascii'
 }
 
 function spritePath(persona: PersonaId, mood: Mood): string {
+  // User sprites are .jpg; fall back to .png if needed
+  const jpg = path.join(SPRITES_DIR, persona, `${mood}.jpg`)
+  if (fs.existsSync(jpg)) return jpg
   return path.join(SPRITES_DIR, persona, `${mood}.png`)
 }
 
@@ -27,7 +32,18 @@ function hasSprite(persona: PersonaId, mood: Mood): boolean {
 }
 
 function renderKitty(persona: PersonaId, mood: Mood): void {
-  const p = spritePath(persona, mood)
+  let p = spritePath(persona, mood)
+  // Kitty protocol requires PNG; convert .jpg via sips (macOS) if needed
+  if (p.endsWith('.jpg') || p.endsWith('.jpeg')) {
+    const tmp = `/tmp/goodboy_${persona}_${mood}.png`
+    try {
+      execSync(`sips -s format png "${p}" --out "${tmp}"`, { stdio: 'ignore' })
+      p = tmp
+    } catch {
+      renderAscii(persona, mood)
+      return
+    }
+  }
   const data = fs.readFileSync(p)
   const b64 = data.toString('base64')
   process.stdout.write(`\x1b_Ga=T,f=100,q=2,c=10,r=5;${b64}\x1b\\`)
@@ -39,7 +55,8 @@ function renderIterm2(persona: PersonaId, mood: Mood): void {
   const data = fs.readFileSync(p)
   const b64 = data.toString('base64')
   const size = data.length
-  process.stdout.write(`\x1b]1337;File=inline=1;size=${size};width=8;height=4:${b64}\x07`)
+  // iTerm2 protocol infers format from file magic bytes — JPEG works natively
+  process.stdout.write(`\x1b]1337;File=inline=1;size=${size};width=10;height=5:${b64}\x07`)
   process.stdout.write('\n')
 }
 
@@ -86,10 +103,12 @@ export function renderBlock(
   persona: PersonaId,
   mood: Mood,
   quip: string,
-  protocol: Protocol
+  _storedProtocol?: Protocol
 ): void {
   const config = getPersona(persona)
   const c = chalk.hex(config.colors.primary)
+  // Always detect fresh — stored protocol can be stale from a different terminal
+  const protocol = detectProtocol()
   console.log()
   renderDivider(c)
   renderDog(persona, mood, protocol)
