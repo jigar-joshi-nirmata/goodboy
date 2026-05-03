@@ -6,8 +6,13 @@
 
 ---
 
-<!-- HERO IMAGE — coming soon -->
-<!-- ![goodboy banner](assets/hero.png) -->
+![goodboy demo](demo.gif)
+
+---
+
+> **6 personas. All different. All opinionated.**
+>
+> ![personas showcase](demo-personas.gif)
 
 ---
 
