@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import {
   readState, writeState, readSession, clearSession, deriveMood,
+  appendLog, clearDiary,
 } from '../state.js'
 import { renderBlock, renderDivider } from '../renderer.js'
 import { pickQuip } from '../quips.js'
@@ -45,6 +46,19 @@ export async function runSessionEnd(): Promise<void> {
   const quip = pickQuip(state.persona, topSignal as Signal)
 
   clearSession()
+  clearDiary()
+
+  appendLog({
+    ts: Date.now(),
+    type: 'session',
+    signal: topSignal,
+    quip,
+    duration_ms: durationMs,
+    errors: session.errors,
+    files: [...new Set(session.files_touched)].length,
+    streak: state.streak,
+    deploys: state.deploy_count,
+  })
 
   const protocol = state.terminal_protocol
   renderBlock(state.persona, mood, quip, protocol)

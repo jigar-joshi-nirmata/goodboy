@@ -1,5 +1,5 @@
 import {
-  readState, writeState, readSession, writeSession, deriveMood,
+  readState, writeState, readSession, writeSession, deriveMood, appendDiary,
 } from '../state.js'
 import { renderBlock } from '../renderer.js'
 import { detectSignal, pickQuip, MILESTONE_QUIPS } from '../quips.js'
@@ -103,6 +103,7 @@ export async function runToolUse(ctx: ToolUseContext): Promise<void> {
   const hasErrorStreak = session.consecutive_errors >= 3
   const mood = deriveMood(state, hasErrorStreak, signal === 'deploy_done')
   const quip = pickQuip(state.persona, signal as Signal)
+  appendDiary({ ts: Date.now(), signal, quip })
   renderBlock(state.persona, mood, quip, state.terminal_protocol)
 }
 

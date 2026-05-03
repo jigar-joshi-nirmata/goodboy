@@ -29,17 +29,36 @@ export function detectSignal(
   const cmd = command.toLowerCase()
   const file = (filename || '').toLowerCase()
 
+  // Destructive / alarming commands
   if (cmd.includes('rm -rf') || cmd.includes('rm-rf')) return 'rm_rf_detected'
-  if (/\b(npm test|jest|vitest|pytest|go test|cargo test)\b/.test(cmd) && exitCode === 0) return 'test_pass'
-  if (/\b(git push|fly deploy|vercel|heroku|npm publish)\b/.test(cmd) && exitCode === 0) return 'deploy_done'
+  if (cmd.includes('git reset') && cmd.includes('--hard')) return 'rm_rf_detected'
 
+  // Deploy events
+  if (/\b(fly deploy|vercel\b|heroku|npm publish|kubectl apply|terraform apply)\b/.test(cmd) && exitCode === 0) return 'deploy_done'
+  if (/\bgit push\b/.test(cmd) && !cmd.includes('--force') && !cmd.includes(' -f') && exitCode === 0) return 'deploy_done'
+
+  // Test events
+  if (/\b(npm test|npm run test|jest|vitest|pytest|go test|cargo test|bundle exec rspec|phpunit)\b/.test(cmd) && exitCode === 0) return 'test_pass'
+
+  // Filename signals
   if (file.match(/legacy_|old_|deprecated_|backup_/)) return 'legacy_file'
-  if (file.match(/\.(css|scss|sass|less)$/)) return 'css_file'
-  if (file.match(/auth|login|token|secret|jwt|oauth/)) return 'auth_file'
-  if (file.match(/\.test\.|\.spec\.|_test\.|_spec\./)) return null // test files: handled by test_pass
+  if (file.match(/\.(css|scss|sass|less|styl)$/)) return 'css_file'
+  if (file.match(/auth|login|token|secret|jwt|oauth|password|credential/)) return 'auth_file'
+  if (file.match(/\.env($|\.)/) ) return 'auth_file'
+  if (file.match(/\.test\.|\.spec\.|_test\.|_spec\./)) return 'new_file'
 
-  if (hourOfDay >= 22 || hourOfDay < 5) return 'late_night'
+  // New file created (write/create operations)
+  if (cmd.includes('touch ') || (cmd.includes('write') && exitCode === 0 && file)) return 'new_file'
+
+  // TODO/console.log found
+  if (cmd.includes('grep') && (cmd.includes('todo') || cmd.includes('fixme') || cmd.includes('console.log')) && exitCode === 0) return 'todo_found'
+
+  // Long session
   if (sessionDurationMs > 3 * 60 * 60 * 1000) return 'long_session'
+
+  // Late night / deep night — highest time-based priority
+  if (hourOfDay >= 22 || hourOfDay < 5) return 'late_night'
+
   if (exitCode === 0) return 'clean_exit'
 
   return null

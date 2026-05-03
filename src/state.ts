@@ -5,6 +5,49 @@ import { GoodboyState, SessionState, DEFAULT_STATE, Mood } from './personas/type
 
 const STATE_PATH = path.join(os.homedir(), '.goodboy')
 const SESSION_PATH = path.join(os.tmpdir(), 'goodboy-session.json')
+export const LOG_PATH = path.join(os.homedir(), '.goodboy-log')
+export const DIARY_PATH = path.join(os.tmpdir(), 'goodboy-diary.json')
+
+export interface LogEntry {
+  ts: number
+  type: 'session' | 'event'
+  signal?: string
+  quip?: string
+  duration_ms?: number
+  errors?: number
+  files?: number
+  streak?: number
+  deploys?: number
+}
+
+export function appendLog(entry: LogEntry): void {
+  let entries: LogEntry[] = []
+  try { entries = JSON.parse(fs.readFileSync(LOG_PATH, 'utf8')) } catch {}
+  entries.push(entry)
+  if (entries.length > 100) entries = entries.slice(-100)
+  const tmp = LOG_PATH + '.tmp'
+  fs.writeFileSync(tmp, JSON.stringify(entries, null, 2))
+  fs.renameSync(tmp, LOG_PATH)
+}
+
+export function readLog(): LogEntry[] {
+  try { return JSON.parse(fs.readFileSync(LOG_PATH, 'utf8')) } catch { return [] }
+}
+
+export function appendDiary(entry: { ts: number; signal: string; quip: string }): void {
+  let entries: typeof entry[] = []
+  try { entries = JSON.parse(fs.readFileSync(DIARY_PATH, 'utf8')) } catch {}
+  entries.push(entry)
+  fs.writeFileSync(DIARY_PATH, JSON.stringify(entries))
+}
+
+export function readDiary(): Array<{ ts: number; signal: string; quip: string }> {
+  try { return JSON.parse(fs.readFileSync(DIARY_PATH, 'utf8')) } catch { return [] }
+}
+
+export function clearDiary(): void {
+  try { fs.unlinkSync(DIARY_PATH) } catch {}
+}
 
 export function readState(): GoodboyState {
   try {
