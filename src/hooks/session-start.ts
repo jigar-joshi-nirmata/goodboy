@@ -3,7 +3,7 @@ import {
   readState, writeState, readSession, writeSession,
   applyDecay, updateStreak, deriveMood,
 } from '../state.js'
-import { renderBlock } from '../renderer.js'
+import { renderBlock, ttyLog } from '../renderer.js'
 import { pickQuip, detectSignal } from '../quips.js'
 import { checkMilestones, markMilestonesSeen } from '../milestones.js'
 import { Signal } from '../personas/types.js'
@@ -37,7 +37,7 @@ export async function runSessionStart(): Promise<void> {
     renderBlock(state.persona, 'excited', m.quip, protocol)
     if (milestones.length > 1) {
       for (const extra of milestones.slice(1)) {
-        console.log(chalk.dim(`  also: "${extra.quip}"`))
+        ttyLog(chalk.dim(`  also: "${extra.quip}"`))
       }
     }
     return

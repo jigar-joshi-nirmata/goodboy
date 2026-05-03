@@ -7,6 +7,21 @@ import { getPersona } from './personas/index.js'
 
 const SPRITES_DIR = path.join(__dirname, '..', 'sprites')
 
+// When stdout is captured by Claude Code hooks, write directly to the terminal
+const _ttyFd = (() => {
+  if (process.stdout.isTTY) return null
+  try { return fs.openSync('/dev/tty', 'w') } catch { return null }
+})()
+
+function ttyWrite(s: string): void {
+  if (_ttyFd !== null) fs.writeSync(_ttyFd, s)
+  else process.stdout.write(s)
+}
+
+export function ttyLog(s: string): void {
+  ttyWrite(s + '\n')
+}
+
 export function detectProtocol(): Protocol {
   const term = process.env.TERM ?? ''
   const termProgram = process.env.TERM_PROGRAM ?? ''
@@ -46,8 +61,8 @@ function renderKitty(persona: PersonaId, mood: Mood): void {
   }
   const data = fs.readFileSync(p)
   const b64 = data.toString('base64')
-  process.stdout.write(`\x1b_Ga=T,f=100,q=2,c=10,r=5;${b64}\x1b\\`)
-  process.stdout.write('\n')
+  ttyWrite(`\x1b_Ga=T,f=100,q=2,c=10,r=5;${b64}\x1b\\`)
+  ttyWrite('\n')
 }
 
 function renderIterm2(persona: PersonaId, mood: Mood): void {
@@ -56,15 +71,15 @@ function renderIterm2(persona: PersonaId, mood: Mood): void {
   const b64 = data.toString('base64')
   const size = data.length
   // iTerm2 protocol infers format from file magic bytes — JPEG works natively
-  process.stdout.write(`\x1b]1337;File=inline=1;size=${size};width=10;height=5:${b64}\x07`)
-  process.stdout.write('\n')
+  ttyWrite(`\x1b]1337;File=inline=1;size=${size};width=10;height=5:${b64}\x07`)
+  ttyWrite('\n')
 }
 
 function renderAscii(persona: PersonaId, mood: Mood): void {
   const config = getPersona(persona)
   const lines = config.ascii[mood] ?? config.ascii.happy
   const color = chalk.hex(config.colors.primary)
-  lines.forEach(line => console.log(color(line)))
+  lines.forEach(line => ttyLog(color(line)))
 }
 
 export function renderDog(persona: PersonaId, mood: Mood, protocol: Protocol): void {
@@ -84,7 +99,7 @@ export function renderQuip(persona: PersonaId, quip: string): void {
   const config = getPersona(persona)
   const color = chalk.hex(config.colors.accent)
   const name = chalk.bold.hex(config.colors.primary)(config.name)
-  console.log(`${name}  ${color(`"${quip}"`)}`)
+  ttyLog(`${name}  ${color(`"${quip}"`)}`)
 }
 
 export function renderStatBar(label: string, value: number, color: chalk.Chalk): void {
@@ -92,11 +107,11 @@ export function renderStatBar(label: string, value: number, color: chalk.Chalk):
   const empty = 10 - filled
   const bar = '█'.repeat(filled) + '░'.repeat(empty)
   const pct = String(value).padStart(3)
-  console.log(`  ${label.padEnd(10)} ${color(bar)}  ${pct}%`)
+  ttyLog(`  ${label.padEnd(10)} ${color(bar)}  ${pct}%`)
 }
 
 export function renderDivider(color: chalk.Chalk): void {
-  console.log(color('  ' + '─'.repeat(44)))
+  ttyLog(color('  ' + '─'.repeat(44)))
 }
 
 export function renderBlock(
@@ -109,10 +124,10 @@ export function renderBlock(
   const c = chalk.hex(config.colors.primary)
   // Always detect fresh — stored protocol can be stale from a different terminal
   const protocol = detectProtocol()
-  console.log()
+  ttyLog('')
   renderDivider(c)
   renderDog(persona, mood, protocol)
   renderQuip(persona, quip)
   renderDivider(c)
-  console.log()
+  ttyLog('')
 }
