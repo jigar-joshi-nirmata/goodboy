@@ -7,6 +7,7 @@ import { renderBlock, renderDivider } from '../renderer.js'
 import { pickQuip } from '../quips.js'
 import { Signal } from '../personas/types.js'
 import { getPersona } from '../personas/index.js'
+import { generateAIQuip } from '../ai.js'
 
 export async function runSessionEnd(): Promise<void> {
   const state = readState()
@@ -43,7 +44,9 @@ export async function runSessionEnd(): Promise<void> {
   const hasErrorStreak = session.consecutive_errors >= 3 || session.errors > 5
   const mood = deriveMood(state, hasErrorStreak, hasDeploy)
 
-  const quip = pickQuip(state.persona, topSignal as Signal)
+  // Try AI quip first (costs ~$0.00005, opt-in via ANTHROPIC_API_KEY)
+  const aiQuip = await generateAIQuip(state, session, durationMs)
+  const quip = aiQuip ?? pickQuip(state.persona, topSignal as Signal)
 
   clearSession()
   clearDiary()

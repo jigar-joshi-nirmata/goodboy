@@ -34,7 +34,7 @@ Pick your companion on first run. Switch anytime with `goodboy switch`.
 ## Install
 
 ```bash
-npm install -g goodboy
+npm install -g goodboy-claude
 goodboy init
 ```
 

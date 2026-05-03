@@ -1,5 +1,5 @@
 {
-  "name": "goodboy",
+  "name": "goodboy-claude",
   "version": "0.1.0",
   "description": "A Tamagotchi for your terminal. Pick a dog. Ship code together.",
   "main": "dist/index.js",

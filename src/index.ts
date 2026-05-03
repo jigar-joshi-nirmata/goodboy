@@ -23,6 +23,7 @@ import { runIgnore } from './commands/ignore.js'
 import { runSniff } from './commands/sniff.js'
 import { runVet } from './commands/vet.js'
 import { runInit } from './commands/init.js'
+import { runAI } from './commands/ai.js'
 import { runSessionStart } from './hooks/session-start.js'
 import { runSessionEnd } from './hooks/session-end.js'
 import { runToolUseFromStdin } from './hooks/tool-use.js'
@@ -62,6 +63,7 @@ async function main(): Promise<void> {
     case 'sniff':    return runSniff()
     case 'vet':      return runVet()
     case 'init':     return runInit(args)
+    case 'ai':       return runAI()
 
     // Hook routing (called by Claude Code hooks)
     case 'hook': {
