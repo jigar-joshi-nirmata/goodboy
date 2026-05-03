@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "prepublishOnly": "npm run build",
     "dev": "ts-node src/index.ts",
     "clean": "rm -rf dist"
   },
@@ -15,10 +16,27 @@
     "dist",
     "quips",
     "sprites",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
-  "keywords": ["claude", "claude-code", "mcp", "terminal", "tamagotchi", "dog"],
-  "author": "jigar-joshi-nirmata",
+  "keywords": [
+    "claude", "claude-code", "anthropic", "mcp", "plugin", "hook",
+    "terminal", "cli", "tamagotchi", "pet", "dog", "companion",
+    "developer-tools", "fun", "productivity"
+  ],
+  "author": {
+    "name": "Jigar Joshi",
+    "email": "jigar.joshi@nirmata.com",
+    "url": "https://github.com/jigar-joshi-nirmata"
+  },
+  "homepage": "https://github.com/jigar-joshi-nirmata/goodboy#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jigar-joshi-nirmata/goodboy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jigar-joshi-nirmata/goodboy/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
