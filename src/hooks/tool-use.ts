@@ -100,11 +100,26 @@ export async function runToolUse(ctx: ToolUseContext): Promise<void> {
 
   writeSession(session)
 
+  // Signals that force a specific mood regardless of stats
+  const forcedMoods: Partial<Record<Signal, string>> = {
+    rm_rf_detected: 'alarmed',
+    error_streak_3: 'alarmed',
+    deploy_done: 'excited',
+    test_pass: 'excited',
+    legacy_file: 'disgusted',
+    todo_found: 'judgy',
+    late_night: 'sleepy',
+    long_session: 'sleepy',
+    css_file: 'judgy',
+    auth_file: 'alarmed',
+  }
+
   const hasErrorStreak = session.consecutive_errors >= 3
-  const mood = deriveMood(state, hasErrorStreak, signal === 'deploy_done')
+  const forcedMood = forcedMoods[signal as Signal]
+  const mood = forcedMood ?? deriveMood(state, hasErrorStreak, signal === 'deploy_done')
   const quip = pickQuip(state.persona, signal as Signal)
   appendDiary({ ts: Date.now(), signal, quip })
-  renderBlock(state.persona, mood, quip, state.terminal_protocol)
+  renderBlock(state.persona, mood as ReturnType<typeof deriveMood>, quip, state.terminal_protocol)
 }
 
 export async function runToolUseFromStdin(): Promise<void> {

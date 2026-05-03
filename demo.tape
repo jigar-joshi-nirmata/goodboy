@@ -1,91 +1,112 @@
-# goodboy demo — record with: vhs demo.tape
+# goodboy — main demo  (run: vhs demo.tape)
 Output demo.gif
 Output demo.mp4
 
-Set Shell "bash"
-Set FontSize 16
-Set Width 900
-Set Height 550
+Set Shell "zsh"
+Set FontSize 14
+Set Width 1200
+Set Height 780
 Set Theme "Dracula"
-Set Padding 20
-Set Framerate 24
+Set Padding 24
+Set Framerate 30
 Set PlaybackSpeed 1
+Set TypingSpeed 58ms
 
-# Title
-Type "# goodboy — your developer companion"
-Sleep 1s
-Ctrl+L
+Hide
+  Type "export GOODBOY_PROTOCOL=ascii && export PS1='$ '"
+  Enter
+  Sleep 300ms
+  Type "cd /Users/f72xg6jcjd/Desktop/mercor/claude-plugin"
+  Enter
+  Sleep 300ms
+  Type "node dist/index.js switch goldie > /dev/null 2>&1"
+  Enter
+  Sleep 300ms
+Show
 
-# Session start simulation
-Type "goodboy hook session-start"
-Sleep 500ms
+Sleep 800ms
+Type "# goodboy — a Tamagotchi for your terminal"
+Sleep 1.5s
 Enter
-Sleep 2s
-Ctrl+L
-
-# Show status
-Type "goodboy status"
-Sleep 500ms
-Enter
-Sleep 3s
-Ctrl+L
-
-# Feed
-Type "goodboy feed"
-Sleep 500ms
-Enter
-Sleep 2s
-Ctrl+L
-
-# Trick
-Type "goodboy rollover"
-Sleep 500ms
-Enter
-Sleep 2s
-Ctrl+L
-
-# Switch persona
-Type "goodboy switch byte"
-Sleep 500ms
+Type "# picks up on your sessions, judges your code, and gates your friday deploys."
 Enter
 Sleep 2.5s
 Ctrl+L
 
-# Byte status
-Type "goodboy speak"
-Sleep 500ms
+Sleep 300ms
+Type "# morning. starting a new session."
 Enter
-Sleep 2s
+Sleep 500ms
+Type "node dist/index.js hook session-start"
+Enter
+Sleep 2.5s
 Ctrl+L
 
-# Deploy gate
-Type "goodboy sit --enable"
-Sleep 500ms
+Sleep 300ms
+Type "# tests pass. the dog is pleased."
 Enter
-Sleep 1.5s
-
-Type "goodboy sit"
-Sleep 500ms
+Sleep 400ms
+Type 'echo '"'"'{"tool_name":"Bash","tool_input":{"command":"npm test"},"tool_response":{"exit_code":0}}'"'"' | node dist/index.js hook tool-use'
 Enter
-Sleep 2s
+Sleep 2.5s
 Ctrl+L
 
-# Vet
-Type "goodboy vet"
-Sleep 500ms
+Sleep 300ms
+Type "# rm -rf. the dog has very strong opinions."
 Enter
-Sleep 5s
-Ctrl+L
-
-# Switch back
-Type "goodboy switch goldie"
-Sleep 500ms
-Enter
-Sleep 2s
-Ctrl+L
-
-# Session end simulation
-Type "goodboy hook session-end"
-Sleep 500ms
+Sleep 400ms
+Type 'echo '"'"'{"tool_name":"Bash","tool_input":{"command":"rm -rf old_backup"},"tool_response":{"exit_code":0}}'"'"' | node dist/index.js hook tool-use'
 Enter
 Sleep 3s
+Ctrl+L
+
+Sleep 300ms
+Type "node dist/index.js status"
+Enter
+Sleep 3.5s
+Ctrl+L
+
+Sleep 300ms
+Type "node dist/index.js feed"
+Enter
+Sleep 2s
+Ctrl+L
+
+Sleep 300ms
+Type "# switch personas anytime."
+Enter
+Sleep 400ms
+Type "node dist/index.js switch shiba"
+Enter
+Sleep 2.5s
+Ctrl+L
+
+Sleep 300ms
+Type "node dist/index.js speak"
+Enter
+Sleep 2.5s
+Type "node dist/index.js beg"
+Enter
+Sleep 2.5s
+Ctrl+L
+
+Sleep 300ms
+Type "# deploy gate. shiba does not negotiate."
+Enter
+Sleep 400ms
+Type "node dist/index.js sit"
+Enter
+Sleep 2.5s
+Ctrl+L
+
+Sleep 300ms
+Type "node dist/index.js hook session-end"
+Enter
+Sleep 4s
+Ctrl+L
+
+Sleep 500ms
+Type "# npm install -g goodboy && goodboy init"
+Sleep 4s
+Enter
+Sleep 1.5s
