@@ -70,9 +70,13 @@ function renderIterm2(persona: PersonaId, mood: Mood): void {
   const data = fs.readFileSync(p)
   const b64 = data.toString('base64')
   const size = data.length
-  // iTerm2 protocol infers format from file magic bytes — JPEG works natively
-  ttyWrite(`\x1b]1337;File=inline=1;size=${size};width=10;height=5:${b64}\x07`)
-  ttyWrite('\n')
+  const IMG_HEIGHT = 5
+  // iTerm2 protocol infers format from file magic bytes — JPEG works natively.
+  // Warp keeps cursor at the image start row after the escape — use CSI n B
+  // (cursor-down) instead of newlines to advance past the image without
+  // triggering terminal scroll, then \r to land at column 0.
+  ttyWrite(`\x1b]1337;File=inline=1;size=${size};width=10;height=${IMG_HEIGHT}:${b64}\x07`)
+  ttyWrite(`\x1b[${IMG_HEIGHT}B\r`)
 }
 
 function renderAscii(persona: PersonaId, mood: Mood): void {
@@ -114,6 +118,23 @@ export function renderDivider(color: chalk.Chalk): void {
   ttyLog(color('  ' + '─'.repeat(44)))
 }
 
+export function renderCompact(
+  persona: PersonaId,
+  mood: Mood,
+  quip: string,
+): void {
+  const config = getPersona(persona)
+  const c = chalk.hex(config.colors.primary)
+  const protocol = detectProtocol()
+  ttyLog('')
+  ttyLog('')
+  renderDivider(c)
+  renderDog(persona, mood, protocol)
+  renderQuip(persona, quip)
+  renderDivider(c)
+  ttyLog('')
+}
+
 export function renderBlock(
   persona: PersonaId,
   mood: Mood,
@@ -124,6 +145,12 @@ export function renderBlock(
   const c = chalk.hex(config.colors.primary)
   // Always detect fresh — stored protocol can be stale from a different terminal
   const protocol = detectProtocol()
+  // Extra leading newlines push the sprite below Claude Code's permission-prompt
+  // UI chrome, which occupies the first few lines of the visible terminal area.
+  ttyLog('')
+  ttyLog('')
+  ttyLog('')
+  ttyLog('')
   ttyLog('')
   renderDivider(c)
   renderDog(persona, mood, protocol)
@@ -131,3 +158,4 @@ export function renderBlock(
   renderDivider(c)
   ttyLog('')
 }
+

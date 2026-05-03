@@ -1,6 +1,6 @@
 {
   "name": "@terminaldogs/goodboy-claude",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A Tamagotchi for your terminal. Pick a dog. Ship code together.",
   "main": "dist/index.js",
   "bin": {

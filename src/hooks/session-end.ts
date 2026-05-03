@@ -1,13 +1,13 @@
 import chalk from 'chalk'
 import {
-  readState, writeState, readSession, clearSession, deriveMood,
-  appendLog, clearDiary,
+  readState, readSession, deriveMood,
+  appendLog,
 } from '../state.js'
-import { renderBlock, renderDivider } from '../renderer.js'
 import { pickQuip } from '../quips.js'
 import { Signal } from '../personas/types.js'
-import { getPersona } from '../personas/index.js'
 import { generateAIQuip } from '../ai.js'
+import { ttyLog } from '../renderer.js'
+import { getPersona } from '../personas/index.js'
 
 export async function runSessionEnd(): Promise<void> {
   const state = readState()
@@ -20,7 +20,6 @@ export async function runSessionEnd(): Promise<void> {
       ? `${durationMin}m`
       : `${Math.floor(durationMin / 60)}h ${durationMin % 60}m`
 
-  // Determine strongest signal from session
   const signalPriority: Signal[] = [
     'rm_rf_detected',
     'error_streak_3',
@@ -44,12 +43,8 @@ export async function runSessionEnd(): Promise<void> {
   const hasErrorStreak = session.consecutive_errors >= 3 || session.errors > 5
   const mood = deriveMood(state, hasErrorStreak, hasDeploy)
 
-  // Try AI quip first (costs ~$0.00005, opt-in via ANTHROPIC_API_KEY)
   const aiQuip = await generateAIQuip(state, session, durationMs)
   const quip = aiQuip ?? pickQuip(state.persona, topSignal as Signal)
-
-  clearSession()
-  clearDiary()
 
   appendLog({
     ts: Date.now(),
@@ -63,22 +58,22 @@ export async function runSessionEnd(): Promise<void> {
     deploys: state.deploy_count,
   })
 
-  const protocol = state.terminal_protocol
-  renderBlock(state.persona, mood, quip, protocol)
-
-  // Session summary line
+  // Compact single-line stat bar — no sprite to avoid cursor corruption at Stop
   const config = getPersona(state.persona)
   const c = chalk.hex(config.colors.primary)
-  const dim = chalk.dim
-
-  renderDivider(c)
-  const parts = [
-    `session: ${durationStr}`,
-    `errors: ${session.errors}`,
-    `files: ${[...new Set(session.files_touched)].length}`,
-    `streak: ${state.streak} day${state.streak !== 1 ? 's' : ''}`,
-  ]
-  console.log(dim('  ' + parts.join('  |  ')))
-  renderDivider(c)
-  console.log()
+  const filesCount = new Set(session.files_touched).size
+  const errorPart = session.errors > 0
+    ? chalk.yellow(`${session.errors} error${session.errors !== 1 ? 's' : ''}`)
+    : chalk.green('clean')
+  ttyLog('')
+  ttyLog(
+    c(`  ${config.name}`) +
+    chalk.dim('  ·  ') +
+    chalk.white(durationStr) +
+    chalk.dim('  ·  ') +
+    chalk.dim(`${filesCount} file${filesCount !== 1 ? 's' : ''}`) +
+    chalk.dim('  ·  ') +
+    errorPart
+  )
+  ttyLog('')
 }

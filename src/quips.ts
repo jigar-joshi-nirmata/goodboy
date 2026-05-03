@@ -33,6 +33,9 @@ export function detectSignal(
   if (cmd.includes('rm -rf') || cmd.includes('rm-rf')) return 'rm_rf_detected'
   if (cmd.includes('git reset') && cmd.includes('--hard')) return 'rm_rf_detected'
 
+  // Git commit
+  if (/\bgit commit\b/.test(cmd) && exitCode === 0) return 'git_commit'
+
   // Deploy events
   if (/\b(fly deploy|vercel\b|heroku|npm publish|kubectl apply|terraform apply)\b/.test(cmd) && exitCode === 0) return 'deploy_done'
   if (/\bgit push\b/.test(cmd) && !cmd.includes('--force') && !cmd.includes(' -f') && exitCode === 0) return 'deploy_done'

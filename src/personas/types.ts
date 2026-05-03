@@ -13,6 +13,7 @@ export type Mood =
 export type Signal =
   | 'clean_exit'
   | 'test_pass'
+  | 'git_commit'
   | 'rm_rf_detected'
   | 'legacy_file'
   | 'todo_found'
@@ -23,6 +24,7 @@ export type Signal =
   | 'long_session'
   | 'css_file'
   | 'auth_file'
+  | 'key_exposed'
 
 export type Protocol = 'kitty' | 'iterm2' | 'ascii' | 'unicode'
 

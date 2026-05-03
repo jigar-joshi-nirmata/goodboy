@@ -25,6 +25,49 @@ const PERSONA_VOICE: Record<PersonaId, string> = {
   debug: 'methodical dachshund — counts everything, keeps a log, technical, never forgets',
 }
 
+export async function generateKeyExposedQuip(
+  state: GoodboyState,
+): Promise<string | null> {
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) return null
+
+  const prompt = `You are ${state.persona}, a ${PERSONA_VOICE[state.persona]}.
+
+A secret API key or credential just appeared in the terminal output. You are DISGUSTED and alarmed.
+Write ONE quip in character reacting to this security incident.
+
+Rules:
+- One sentence only. No quotes around it.
+- Do NOT reproduce or reference any key value.
+- Strongly recommend rotating the key.
+- Stay in voice. ${state.persona === 'pugsy' ? 'Max 6 words.' : ''}${state.persona === 'nova' ? 'ALL CAPS.' : ''}
+- Do not start with "I" or the dog name.`
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: HAIKU_MODEL,
+        max_tokens: 80,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json() as { content?: Array<{ text?: string }> }
+    const text = data.content?.[0]?.text?.trim()
+    return text ?? null
+  } catch {
+    return null
+  }
+}
+
 export async function generateAIQuip(
   state: GoodboyState,
   session: SessionState,
