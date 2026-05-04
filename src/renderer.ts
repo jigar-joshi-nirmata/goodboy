@@ -71,12 +71,10 @@ function renderIterm2(persona: PersonaId, mood: Mood): void {
   const b64 = data.toString('base64')
   const size = data.length
   const IMG_HEIGHT = 5
-  // iTerm2 protocol infers format from file magic bytes — JPEG works natively.
-  // Warp keeps cursor at the image start row after the escape — use CSI n B
-  // (cursor-down) instead of newlines to advance past the image without
-  // triggering terminal scroll, then \r to land at column 0.
   ttyWrite(`\x1b]1337;File=inline=1;size=${size};width=10;height=${IMG_HEIGHT}:${b64}\x07`)
-  ttyWrite(`\x1b[${IMG_HEIGHT}B\r`)
+  // Warp keeps cursor at the image start row — cursor-down N advances past it.
+  // Extra \n ensures a clean blank line below the image on all terminals.
+  ttyWrite(`\x1b[${IMG_HEIGHT}B\r\n`)
 }
 
 function renderAscii(persona: PersonaId, mood: Mood): void {
@@ -118,6 +116,9 @@ export function renderDivider(color: chalk.Chalk): void {
   ttyLog(color('  ' + '─'.repeat(44)))
 }
 
+// Lines written by the compact render body (2 blank + divider + 4 ASCII + quip + divider + 1 blank)
+const COMPACT_LINES = 10
+
 export function renderCompact(
   persona: PersonaId,
   mood: Mood,
@@ -125,14 +126,21 @@ export function renderCompact(
 ): void {
   const config = getPersona(persona)
   const c = chalk.hex(config.colors.primary)
-  const protocol = detectProtocol()
+  // Move the dog UP into recently-seen output so Claude Code's next write at the
+  // current cursor position doesn't immediately overwrite it.  Save/restore keeps
+  // Claude Code's cursor tracking intact so the input prompt lands correctly.
+  const scrollUp = COMPACT_LINES + 5
+  ttyWrite('\x1b7')                       // DEC save cursor
+  ttyWrite(`\x1b[${scrollUp}A\r`)        // move up, col 0
   ttyLog('')
   ttyLog('')
   renderDivider(c)
-  renderDog(persona, mood, protocol)
+  renderDog(persona, mood, 'ascii')       // always ASCII mid-session — images cause cursor drift
   renderQuip(persona, quip)
   renderDivider(c)
   ttyLog('')
+  ttyWrite('\x1b[0m')                     // reset terminal attributes
+  ttyWrite('\x1b8')                       // DEC restore cursor
 }
 
 export function renderBlock(
@@ -143,10 +151,8 @@ export function renderBlock(
 ): void {
   const config = getPersona(persona)
   const c = chalk.hex(config.colors.primary)
-  // Always detect fresh — stored protocol can be stale from a different terminal
   const protocol = detectProtocol()
-  // Extra leading newlines push the sprite below Claude Code's permission-prompt
-  // UI chrome, which occupies the first few lines of the visible terminal area.
+  // Leading newlines push the block below Claude Code's startup UI chrome.
   ttyLog('')
   ttyLog('')
   ttyLog('')
@@ -157,5 +163,6 @@ export function renderBlock(
   renderQuip(persona, quip)
   renderDivider(c)
   ttyLog('')
+  ttyWrite('\x1b[0m')  // reset terminal attributes so Claude Code's UI starts clean
 }
 
